@@ -5,6 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eye-web</title>
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        document.addEventListener('DOMContentLoaded', function() {
+          document.body.innerHTML = '<div style="color:red; padding:20px; font-family:sans-serif;"><h1>Application Error</h1><p>' + message + '</p><pre>' + (error ? error.stack : '') + '</pre></div>';
+        });
+      };
+      window.addEventListener('unhandledrejection', function(event) {
+        document.addEventListener('DOMContentLoaded', function() {
+          document.body.innerHTML = '<div style="color:red; padding:20px; font-family:sans-serif;"><h1>Unhandled Promise Rejection</h1><p>' + (event.reason ? event.reason.toString() : 'Unknown Error') + '</p></div>';
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
