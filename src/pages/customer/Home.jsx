@@ -49,26 +49,18 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <div className="hero-text">
-            <div className="hero-eyebrow">
-              <div className="line"></div>
-              <span>PREMIUM OPTICAL BOUTIQUE</span>
-            </div>
-            <h1 className="hero-title">See Better. Look Better.</h1>
-            <p className="hero-subtitle">
-              Discover premium eyewear crafted for clarity, comfort, and style. From prescription lenses to designer frames — your perfect pair awaits.
-            </p>
-          </div>
-          <div className="hero-actions">
-            <Link to="/products" className="btn btn--primary">Shop Collection</Link>
-            <Link to="/category/sunglasses" className="btn btn--outline-dark">
-              Explore Eyewear
-            </Link>
-          </div>
-        </div>
-        <div className="hero-image-container"></div>
+      <section className="hero-section" style={{ height: 'auto', padding: 0 }}>
+        <img 
+          src="/hero.jpeg" 
+          alt="EyeWeb Hero Banner" 
+          style={{ 
+            width: '100%', 
+            height: 'auto', 
+            maxHeight: '700px',
+            objectFit: 'cover',
+            display: 'block' 
+          }} 
+        />
       </section>
 
       {/* Features Banner */}
