@@ -1,0 +1,53 @@
+.admin-sidebar {
+  width: var(--admin-sidebar-width);
+  background-color: var(--color-white);
+  border-right: 1px solid var(--color-border);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar__header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-sidebar__header h2 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.admin-sidebar__nav {
+  padding: 1rem 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.admin-sidebar__link {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-text);
+  font-weight: 500;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-sidebar__link:hover {
+  background-color: var(--color-background);
+  color: var(--color-primary);
+}
+
+.admin-sidebar__footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-sidebar__user {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  word-break: break-all;
+}

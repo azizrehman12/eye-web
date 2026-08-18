@@ -1,0 +1,121 @@
+.mobile-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+}
+
+.mobile-sidebar-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 85%;
+  max-width: 360px;
+  background-color: var(--color-white);
+  z-index: 1001;
+  transition: left var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+}
+
+.mobile-sidebar.is-open {
+  left: 0;
+}
+
+.mobile-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-sidebar__header h2 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.mobile-sidebar__close {
+  color: var(--color-text-muted);
+  padding: 0.5rem;
+  margin: -0.5rem;
+}
+
+.mobile-sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+}
+
+.mobile-sidebar__nav ul {
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-sidebar__nav li {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-sidebar__nav li:last-child {
+  border-bottom: none;
+}
+
+.mobile-sidebar__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  color: var(--color-text);
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.mobile-sidebar__link:hover {
+  background-color: var(--color-background);
+  color: var(--color-primary);
+}
+
+.mobile-sidebar__cat-link {
+  flex: 1;
+  color: inherit;
+}
+
+.mobile-sidebar__subnav {
+  background-color: var(--color-background);
+  padding-left: 2rem;
+  display: none;
+}
+
+.mobile-sidebar__subnav.is-open {
+  display: block;
+}
+
+.mobile-sidebar__sublink {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.mobile-sidebar__sublink:hover {
+  color: var(--color-primary);
+}
+
+.mobile-sidebar__search {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}

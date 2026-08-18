@@ -1,0 +1,74 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: var(--admin-sidebar-width);
+}
+
+/* Card for Admin panels */
+.admin-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+/* Admin typography overrides */
+.admin-content h1 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+}
+
+/* Utility classes */
+.text-error {
+  color: var(--color-error) !important;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-table th {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background-color: var(--color-background);
+}
+
+.admin-table tr:hover td {
+  background-color: var(--color-primary-light);
+}
+
+.admin-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}

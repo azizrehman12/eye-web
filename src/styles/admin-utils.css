@@ -1,0 +1,61 @@
+/* Added Utility Classes for Admin */
+.flex-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.max-w-md {
+  max-width: 500px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-icon {
+  padding: 0.25rem 0.5rem;
+}
+
+.btn-icon-danger {
+  padding: 0.25rem 0.5rem;
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.d-none {
+  display: none !important;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
+.my-2 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.align-center {
+  align-items: center;
+}

@@ -1,0 +1,40 @@
+/* Responsive Breakpoints */
+
+/* Tablet & Smaller */
+@media (max-width: 1024px) {
+  :root {
+    --container-width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  :root {
+    --header-height: var(--header-height-mobile);
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* Utility classes for mobile hiding */
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Desktop Only */
+@media (min-width: 769px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
