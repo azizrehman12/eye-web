@@ -16,8 +16,10 @@ const AdminLogin = () => {
     e.preventDefault();
     setError(null);
     setIsLoggingIn(true);
+    console.log('Login attempt:', email);
 
     const { error, isAdmin: userIsAdmin } = await login(email, password);
+    console.log('Login result:', { error, userIsAdmin });
 
     if (error) {
       setError(error.message);
