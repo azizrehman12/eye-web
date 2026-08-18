@@ -38,11 +38,11 @@ const ProductCard = ({ product }) => {
           <div className="prices">
             {hasSale ? (
               <>
-                <span className="sale-price">${product.sale_price}</span>
-                <span className="original-price">${product.price}</span>
+                <span className="sale-price">Rs. {product.sale_price}</span>
+                <span className="original-price">Rs. {product.price}</span>
               </>
             ) : (
-              <span className="sale-price">${product.price}</span>
+              <span className="sale-price">Rs. {product.price}</span>
             )}
           </div>
         </div>

@@ -16,11 +16,10 @@ const Header = ({ onOpenSidebar }) => (
         <Menu size={24} />
       </button>
 
-      <Link to="/" className="site-header__logo">
-        <div className="logo-mark">
-          <Eye size={18} color="#FFFFFF" strokeWidth={2} />
+      <Link to="/" className="site-header__logo" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', marginRight: '32px' }}>
+        <div style={{ height: '50px', width: '150px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+          <img src="/IMG_7101.PNG" alt="APlusOptics Logo" style={{ height: '140px', mixBlendMode: 'multiply', filter: 'contrast(1.2) brightness(1.1)' }} />
         </div>
-        <span className="logo-text">OptiVue</span>
       </Link>
       
       <nav className="site-header__nav hide-on-mobile">
@@ -51,11 +50,10 @@ const Footer = () => (
   <footer className="footer-container">
     <div className="footer-grid">
       <div className="footer-col-about">
-        <Link to="/" className="footer-logo">
-          <div className="footer-logo-mark">
-            <Eye size={18} strokeWidth={2} />
+        <Link to="/" className="footer-logo" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <div style={{ height: '40px', width: '120px', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+            <img src="/IMG_7101.PNG" alt="APlusOptics Logo" style={{ height: '110px', mixBlendMode: 'screen', filter: 'grayscale(1) invert(1) contrast(2)' }} />
           </div>
-          <span className="footer-logo-text">OptiVue</span>
         </Link>
         <p className="footer-about-text">
           Clinical expertise meets high-end eyewear fashion. We deliver certified prescription solutions tailored to your unique visual identity.
@@ -97,7 +95,7 @@ const Footer = () => (
     <div className="footer-divider"></div>
     
     <div className="footer-bottom-bar">
-      <p className="footer-copyright">&copy; 2026 OptiVue Optical. All rights reserved. Registered Eye Specialists.</p>
+      <p className="footer-copyright">&copy; 2026 APlusOptics. All rights reserved. Registered Eye Specialists.</p>
       <div className="payment-icons">
         <div className="payment-icon-box">
           <CreditCard size={14} strokeWidth={2} />

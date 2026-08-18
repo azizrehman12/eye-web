@@ -119,10 +119,10 @@ const Products = () => {
             </div>
             {!collapsedFilters['price'] && (
               <div className="filter-list">
-                <label className="filter-item"><input type="checkbox" /> Under $50</label>
-                <label className="filter-item"><input type="checkbox" /> $50 - $100</label>
-                <label className="filter-item"><input type="checkbox" /> $100 - $200</label>
-                <label className="filter-item"><input type="checkbox" /> Over $200</label>
+                <label className="filter-item"><input type="checkbox" /> Under Rs. 5000</label>
+                <label className="filter-item"><input type="checkbox" /> Rs. 5000 - Rs. 10000</label>
+                <label className="filter-item"><input type="checkbox" /> Rs. 10000 - Rs. 20000</label>
+                <label className="filter-item"><input type="checkbox" /> Over Rs. 20000</label>
               </div>
             )}
           </div>

@@ -194,7 +194,7 @@ const Home = () => {
         <div className="lens-text-area">
           <div className="lens-heading-container">
             <h2 className="lens-title">Advanced Lens Technology</h2>
-            <p className="lens-subtitle">At OptiVue, a stunning frame is only half the story. Our German-engineered prescription lenses offer pristine optical clarity and robust modern safeguards.</p>
+            <p className="lens-subtitle">At APlusOptics, a stunning frame is only half the story. Our German-engineered prescription lenses offer pristine optical clarity and robust modern safeguards.</p>
           </div>
           
           <div className="lens-features-list">
@@ -238,7 +238,7 @@ const Home = () => {
         <div className="story-content">
           <div className="story-tag">DECADE OF OPTICAL ARTISTRY</div>
           <h2 className="story-heading">Clinical Excellence Meets High Fashion</h2>
-          <p className="story-paragraph">OptiVue was founded with a singular purpose: to bridge the gap between clinical optical expertise and refined contemporary aesthetics. Every frame is hand-selected in Italy, while each premium lens is custom-cut in our labs to match your exact prescription parameters. We believe vision correction shouldn't hide your character — it should define it.</p>
+          <p className="story-paragraph">APlusOptics was founded with a singular purpose: to bridge the gap between clinical optical expertise and refined contemporary aesthetics. Every frame is hand-selected in Italy, while each premium lens is custom-cut in our labs to match your exact prescription parameters. We believe vision correction shouldn't hide your character — it should define it.</p>
           <div className="story-signature">
             <span className="signature-name">Dr. Marcus Sterling</span>
             <div className="signature-dot"></div>

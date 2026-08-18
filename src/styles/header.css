@@ -36,6 +36,7 @@
   padding: 0px;
   gap: 8px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
 .logo-mark {
@@ -64,7 +65,8 @@
   flex-direction: row;
   align-items: center;
   padding: 0px;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 1;
 }
 
 .site-header__nav a {
@@ -111,7 +113,8 @@
   flex-direction: row;
   align-items: center;
   padding: 0px;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
 .icon-actions {
@@ -146,7 +149,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 12px 24px;
+  padding: 10px 16px;
   gap: 8px;
   background: #075E54;
   border-radius: 6px;
@@ -159,19 +162,32 @@
   border: none;
   cursor: pointer;
   transition: background-color var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-consult:hover {
   background: #054C44;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
   .site-header__inner {
-    padding: 0px 40px;
+    padding: 0px 24px;
   }
   .site-header__nav {
-    gap: 16px;
+    gap: 8px;
+  }
+  .site-header__nav a {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .site-header__inner {
+    padding: 0px 20px;
+  }
+  .site-header__nav {
+    display: none; /* Hide huge nav on tablet/mobile */
   }
 }
 
