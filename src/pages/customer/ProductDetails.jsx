@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { productService } from '../../services/productService';
-import WhatsAppButton from '../../components/shared/WhatsAppButton';
+import PurchaseButton from '../../components/shared/PurchaseButton';
 import '../../styles/product-details.css';
 
 const ProductDetails = () => {
@@ -141,7 +141,7 @@ const ProductDetails = () => {
           )}
 
           <div className="product-actions mt-2">
-            <WhatsAppButton product={product} />
+            <PurchaseButton product={product} variant="full" />
           </div>
         </div>
       </div>

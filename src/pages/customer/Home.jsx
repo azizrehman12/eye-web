@@ -7,16 +7,37 @@ import '../../styles/home.css';
 
 import ProductCard from '../../components/shared/ProductCard';
 
+const FALLBACK_CATEGORIES = [
+  { id: '1', slug: 'mens', name: 'Men\'s', image_url: '/category-card.svg' },
+  { id: '2', slug: 'womens', name: 'Women\'s', image_url: '/category-card (1).svg' },
+  { id: '3', slug: 'eyeglasses', name: 'Eyeglasses', image_url: '/category-card (2).svg' },
+  { id: '4', slug: 'sunglasses', name: 'Sunglasses', image_url: '/category-card (3).svg' },
+  { id: '5', slug: 'screen-glasses', name: 'Screen Glasses', image_url: '/category-card (5).svg' },
+  { id: '6', slug: 'intelligent-glasses', name: 'Intelligent Glasses', image_url: '/category-card (6).svg' },
+  { id: '7', slug: 'contact-lenses', name: 'Contact Lenses', image_url: '/category-card (7).svg' },
+];
+
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
+  const [homeCategories, setHomeCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
         const { supabase } = await import('../../lib/supabase');
-        
+
+        // Fetch Categories
+        const { data: cats } = await supabase
+          .from('categories')
+          .select('*')
+          .eq('active', true)
+          .not('image_url', 'is', null)
+          .order('name');
+
+        setHomeCategories(cats && cats.length > 0 ? cats : FALLBACK_CATEGORIES);
+
         // Fetch Featured
         const { data: featured } = await supabase
           .from('products')
@@ -24,7 +45,7 @@ const Home = () => {
           .eq('active', true)
           .eq('featured', true)
           .limit(4);
-          
+
         setFeaturedProducts(featured || []);
 
         // Fetch New Arrivals
@@ -34,7 +55,7 @@ const Home = () => {
           .eq('active', true)
           .eq('new_arrival', true)
           .limit(4);
-          
+
         setNewArrivals(newProd || []);
       } catch (err) {
         console.error("Failed to load home data", err);
@@ -50,16 +71,16 @@ const Home = () => {
     <div>
       {/* Hero Section */}
       <section className="hero-section" style={{ height: 'auto', padding: 0 }}>
-        <img 
-          src="/hero.jpeg" 
-          alt="EyeWeb Hero Banner" 
-          style={{ 
-            width: '100%', 
-            height: 'auto', 
+        <img
+          src="/hero.jpeg"
+          alt="EyeWeb Hero Banner"
+          style={{
+            width: '100%',
+            height: 'auto',
             maxHeight: '700px',
             objectFit: 'cover',
-            display: 'block' 
-          }} 
+            display: 'block'
+          }}
         />
       </section>
 
@@ -103,23 +124,39 @@ const Home = () => {
           <h2 className="categories-title">Shop by Category</h2>
           <p className="categories-subtitle">Precision engineered eyewear and options curated for every visual demand</p>
         </div>
-        
+
         <div className="categories-grid">
-          <Link to="/category/mens" className="category-card" style={{ backgroundImage: `url('/category-card.svg')` }} aria-label="Men's Eyewear" />
-          
-          <Link to="/category/womens" className="category-card" style={{ backgroundImage: `url('/category-card (1).svg')` }} aria-label="Women's Eyewear" />
-
-          <Link to="/category/eyeglasses" className="category-card" style={{ backgroundImage: `url('/category-card (2).svg')` }} aria-label="Eyeglasses" />
-
-          <Link to="/category/sunglasses" className="category-card" style={{ backgroundImage: `url('/category-card (3).svg')` }} aria-label="Sunglasses" />
-
-          <Link to="/category/screen-glasses" className="category-card" style={{ backgroundImage: `url('/category-card (5).svg')` }} aria-label="Screen Glasses" />
-
-          <Link to="/category/intelligent-glasses" className="category-card" style={{ backgroundImage: `url('/category-card (6).svg')` }} aria-label="Intelligent Glasses" />
-
-          <Link to="/category/contact-lenses" className="category-card" style={{ backgroundImage: `url('/category-card (7).svg')` }} aria-label="Contact Lenses" />
-
-          <Link to="/category/accessories" className="category-card" style={{ backgroundImage: `url('/category-card (8).svg')` }} aria-label="Accessories" />
+          {homeCategories.length > 0 ? (
+            homeCategories.map(cat => (
+              <Link
+                key={cat.id}
+                to={`/category/${cat.slug}`}
+                className="category-card"
+                aria-label={cat.name}
+                style={cat.image_url?.endsWith('.svg') ? { 
+                  backgroundImage: `url('${cat.image_url}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center'
+                } : {}}
+              >
+                {!cat.image_url?.endsWith('.svg') && (
+                  <>
+                    <img src={cat.image_url} alt={cat.name} className="category-image" loading="lazy" />
+                    <div className="category-overlay"></div>
+                    <div className="category-info" style={{ position: 'relative', zIndex: 3 }}>
+                      <h3 className="category-title">{cat.name}</h3>
+                      <span className="category-link">Explore Frames <ChevronRight size={14} /></span>
+                    </div>
+                  </>
+                )}
+              </Link>
+            ))
+          ) : (
+            <div className="empty-state" style={{ width: '100%', gridColumn: '1 / -1' }}>
+              <h3>Collection Curating</h3>
+              <p>Our experts are preparing a new selection of eyewear categories. Check back soon.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -188,7 +225,7 @@ const Home = () => {
             <h2 className="lens-title">Advanced Lens Technology</h2>
             <p className="lens-subtitle">At APlusOptics, a stunning frame is only half the story. Our German-engineered prescription lenses offer pristine optical clarity and robust modern safeguards.</p>
           </div>
-          
+
           <div className="lens-features-list">
             <div className="lens-feature">
               <div className="feature-icon-circle">
@@ -221,7 +258,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="lens-image-container" aria-label="Advanced Lens Technology image"></div>
       </section>
 
@@ -255,7 +292,7 @@ const Home = () => {
               <p className="column-desc">Our lenses carry strict optical certification. We inspect each pair across 17 control points before safe dispatch to your door.</p>
             </div>
           </div>
-          
+
           <div className="choose-column">
             <div className="column-icon-bg">
               <Camera size={24} strokeWidth={2} />
@@ -265,7 +302,7 @@ const Home = () => {
               <p className="column-desc">Leverage our cutting-edge web AR tool to accurately measure your pupillary distance and preview frames in high-fidelity 3D.</p>
             </div>
           </div>
-          
+
           <div className="choose-column">
             <div className="column-icon-bg">
               <User size={24} strokeWidth={2} />
@@ -295,7 +332,7 @@ const Home = () => {
           </WhatsAppButton>
         </div>
       </section>
-      
+
     </div>
   );
 };

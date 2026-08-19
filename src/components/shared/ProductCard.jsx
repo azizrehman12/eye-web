@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Phone } from 'lucide-react';
-import WhatsAppButton from './WhatsAppButton';
+import { Heart } from 'lucide-react';
+import PurchaseButton from './PurchaseButton';
 
 const ProductCard = ({ product }) => {
   const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0];
@@ -51,9 +51,7 @@ const ProductCard = ({ product }) => {
           <Link to={`/products/${product.slug}`} className="view-details-btn">
             View Details
           </Link>
-          <WhatsAppButton product={product} className="whatsapp-action">
-            <Phone size={18} strokeWidth={2} />
-          </WhatsAppButton>
+          <PurchaseButton product={product} variant="card" />
         </div>
       </div>
     </div>

@@ -39,7 +39,8 @@ const ProductForm = () => {
     size: '',
     featured: false,
     new_arrival: false,
-    active: true
+    active: true,
+    purchase_method: 'whatsapp'
   });
 
   const [images, setImages] = useState([]);
@@ -340,6 +341,23 @@ const ProductForm = () => {
                 min="0"
                 required
               />
+            </div>
+
+            {/* Purchase Method */}
+            <div className="form-group">
+              <label className="form-label">Purchase Method *</label>
+              <select
+                name="purchase_method"
+                className="form-control"
+                value={formData.purchase_method}
+                onChange={handleInputChange}
+              >
+                <option value="whatsapp">WhatsApp (Glasses / Rims / Eyeglasses)</option>
+                <option value="direct_order">Direct Order (Sunglasses / Only Frames)</option>
+              </select>
+              <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                WhatsApp: customer gets a pre-filled WhatsApp message. Direct Order: customer fills an order form and confirms via email.
+              </p>
             </div>
 
             {/* Attributes */}

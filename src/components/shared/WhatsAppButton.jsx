@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { settingsService } from '../../services/settingsService';
 
 const WhatsAppButton = ({ product, className = '', children }) => {
-  const [phoneNumber, setPhoneNumber] = useState('923000000000'); // Default fallback
+  const [phoneNumber, setPhoneNumber] = useState('923169649626'); // Default fallback
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -21,7 +21,8 @@ const WhatsAppButton = ({ product, className = '', children }) => {
   const handleClick = (e) => {
     e.preventDefault();
     
-    let message = "Hello! I need some help choosing a frame or lens.";
+    const currentUrl = window.location.href;
+    let message = `Hello! I need some help choosing a frame or lens. I am currently looking at:\n${currentUrl}`;
     
     if (product) {
       const baseUrl = window.location.origin;
@@ -30,7 +31,7 @@ const WhatsAppButton = ({ product, className = '', children }) => {
 
 Product: ${product.name}
 Category: ${product.categories?.name || 'N/A'}
-Price: $${product.sale_price ? product.sale_price : product.price}
+Price: Rs. ${product.sale_price ? product.sale_price : product.price}
 SKU: ${product.sku || 'N/A'}
 
 Product Link:

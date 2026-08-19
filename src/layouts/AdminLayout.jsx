@@ -27,7 +27,7 @@ const AdminLayout = () => {
           <button onClick={logout} className="btn btn--outline btn--full">Logout</button>
         </div>
       </aside>
-      
+
       <main className="admin-content">
         <Outlet />
       </main>

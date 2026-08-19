@@ -2,70 +2,86 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   padding: 0px;
   position: relative;
   width: 100%;
   background: #FFFFFF;
-  border-bottom: 1px solid #E2E8F0;
-  top: 0;
-  z-index: 100;
+  height: var(--header-height);
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .site-header__inner {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  padding: 0px 80px;
+  justify-content: space-between;
+  height: 100%;
   width: 100%;
-  max-width: 1440px;
+  max-width: 1400px;
   margin: 0 auto;
-  height: var(--header-height);
-  flex: none;
-  order: 0;
-  align-self: stretch;
-  flex-grow: 0;
+  padding: 0 32px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
 }
 
 .site-header__logo {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0px;
+  justify-content: center;
+  height: 50px;
+  width: 180px; /* Fixed container size for desktop */
+  overflow: hidden; /* Prevent zoomed image from spilling out */
+}
+
+/* OptiVue Logo Styling */
+.header-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.6); /* Reduced from 2.0 to prevent edge clipping */
+  margin: 0;
+}
+
+.optivue-logo {
+  display: flex;
+  align-items: center;
   gap: 8px;
   text-decoration: none;
-  flex-shrink: 0;
 }
 
-.logo-mark {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
+.optivue-logo-icon {
+  background-color: #0f172a;
+  border-radius: 8px;
   width: 32px;
   height: 32px;
-  background: #0F172A;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logo-text {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
+.optivue-logo-text {
   font-weight: 800;
-  font-size: 24px;
-  line-height: 30px;
-  color: #0F172A;
+  font-size: 1.25rem;
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
+/* Header Navigation */
 .site-header__nav {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0px;
-  gap: 12px;
+  gap: 24px;
   flex-shrink: 1;
 }
 
@@ -174,9 +190,11 @@
   .site-header__inner {
     padding: 0px 24px;
   }
+
   .site-header__nav {
     gap: 8px;
   }
+
   .site-header__nav a {
     font-size: 12px;
   }
@@ -186,14 +204,72 @@
   .site-header__inner {
     padding: 0px 20px;
   }
+
   .site-header__nav {
-    display: none; /* Hide huge nav on tablet/mobile */
+    display: none;
+    /* Hide huge nav on tablet/mobile */
   }
 }
 
 @media (max-width: 767px) {
   .site-header__inner {
-    padding: 0px 20px;
-    height: var(--header-height-mobile);
+    padding: 0px 12px;
+    height: 60px;
+    gap: 8px;
+  }
+
+  .header-left {
+    gap: 0;
+    min-width: 0;
+  }
+
+  .site-header__logo {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0px;
+    height: 44px;
+    width: 140px; /* Fixed container size for mobile */
+    overflow: hidden;
+  }
+
+  .header-logo-img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    transform: scale(1.6); /* Reduced from 2.5 to prevent edge clipping */
+  }
+
+  .site-header__actions {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .icon-actions {
+    gap: 2px;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .hide-on-desktop.icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn-consult-green {
+    padding: 0;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    background-color: #0f766e; /* Teal green */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
   }
 }
