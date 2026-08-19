@@ -140,13 +140,17 @@ const AdminCategories = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this category? Products linked to it might be affected.")) return;
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
     try {
       await categoryService.deleteCategory(id);
       await fetchCategories();
     } catch (err) {
-      setError(err.message);
-      alert("Error deleting category: " + err.message);
+      if (err.message && err.message.includes("foreign key constraint")) {
+        alert("Cannot delete this category because there are products inside it. Please reassign or delete those products first.");
+      } else {
+        setError(err.message);
+        alert("Error deleting category: " + err.message);
+      }
     }
   };
 
