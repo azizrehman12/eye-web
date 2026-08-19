@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle, ShoppingBag, Loader } from 'lucide-react';
 import { orderService } from '../../services/orderService';
 import '../../styles/order-modal.css';
@@ -87,7 +88,7 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className={`order-modal-overlay ${isOpen ? 'is-open' : ''}`} onClick={(e) => e.target === e.currentTarget && handleClose()}>
       <div className="order-modal" role="dialog" aria-modal="true" aria-label="Place Order">
 
@@ -293,7 +294,8 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
