@@ -148,7 +148,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "APlusOptics Orders <onboarding@resend.dev>",
+        from: "APlusOptics Orders <orders@aplusoptics.com>",
         to: ["2022n05445@gmail.com"],
         subject: `New Confirmed Order — #${shortOrderId}`,
         html: ownerEmailHtml,

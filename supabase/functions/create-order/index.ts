@@ -206,7 +206,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "APlusOptics Orders <onboarding@resend.dev>",
+        from: "APlusOptics Orders <orders@aplusoptics.com>",
         to: [customer_email],
         subject: `Confirm Your APlusOptics Order #${shortOrderId}`,
         html: emailHtml,
