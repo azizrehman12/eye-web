@@ -101,7 +101,7 @@ serve(async (req) => {
         .single();
       
       if (productData?.slug) {
-        productLink = `https://aplusoptics.com/product/${productData.slug}`;
+        productLink = `https://aplusoptics.com/products/${productData.slug}`;
       }
     }
 
