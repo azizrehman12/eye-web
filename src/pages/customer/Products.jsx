@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useParams, useNavigate } from 'react-router-dom';
 import { productService } from '../../services/productService';
 import { categoryService } from '../../services/categoryService';
 import { ChevronDown, ChevronUp } from 'lucide-react';
@@ -13,6 +13,8 @@ const Products = () => {
   const [searchParams] = useSearchParams();
   const search = searchParams.get('search') || '';
   
+  const { slug } = useParams();
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,6 +39,28 @@ const Products = () => {
     };
     fetchCats();
   }, []);
+
+  useEffect(() => {
+    if (slug && categories.length > 0) {
+      const cat = categories.find(c => c.slug === slug);
+      if (cat) {
+        setSelectedCategory(cat.id);
+      } else {
+        setSelectedCategory('');
+      }
+    } else if (!slug) {
+      setSelectedCategory('');
+    }
+  }, [slug, categories]);
+
+  const handleCategoryChange = (catId) => {
+    if (!catId) {
+      navigate('/products');
+    } else {
+      const cat = categories.find(c => c.id === catId);
+      if (cat) navigate(`/category/${cat.slug}`);
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -92,8 +116,8 @@ const Products = () => {
                   <input 
                     type="radio" 
                     name="category" 
-                    checked={selectedCategory === ''} 
-                    onChange={() => setSelectedCategory('')} 
+                    checked={!slug} 
+                    onChange={() => handleCategoryChange('')} 
                   />
                   All Categories
                 </label>
@@ -103,7 +127,7 @@ const Products = () => {
                       type="radio" 
                       name="category" 
                       checked={selectedCategory === cat.id} 
-                      onChange={() => setSelectedCategory(cat.id)} 
+                      onChange={() => handleCategoryChange(cat.id)} 
                     />
                     {cat.name}
                   </label>
@@ -146,10 +170,10 @@ const Products = () => {
         <div className="right-content-area">
           <div className="products-header-top">
             <div className="products-breadcrumb">
-              Home {'>'} All Products
+              Home {'>'} {slug && selectedCategory ? (categories.find(c => c.id === selectedCategory)?.name || 'Category') : 'All Products'}
             </div>
             <div className="products-title-row">
-              <h1>{search ? `Search Results for "${search}"` : 'All Products'}</h1>
+              <h1>{search ? `Search Results for "${search}"` : (slug && selectedCategory ? (categories.find(c => c.id === selectedCategory)?.name || 'Category') : 'All Products')}</h1>
               <div className="products-count">{products.length} Products</div>
             </div>
           </div>

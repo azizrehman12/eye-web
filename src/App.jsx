@@ -19,7 +19,6 @@ import AdminCategories from './pages/admin/AdminCategories';
 import AdminOrders from './pages/admin/AdminOrders';
 import OrderConfirmation from './pages/customer/OrderConfirmation';
 
-const Category = () => <div className="container"><h1>Category Redirecting...</h1></div>;
 const AdminSettings = () => <div><h1>Admin Settings</h1></div>;
 
 // Protected Route wrapper
@@ -46,7 +45,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="products" element={<Products />} />
             <Route path="products/:id" element={<ProductDetails />} />
-            <Route path="category/:slug" element={<Category />} />
+            <Route path="category/:slug" element={<Products />} />
             <Route path="order/confirm" element={<OrderConfirmation />} />
             <Route path="*" element={<NotFound />} />
           </Route>
