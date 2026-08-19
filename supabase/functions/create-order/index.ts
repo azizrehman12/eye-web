@@ -199,19 +199,27 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       );
     }
 
-    await fetch("https://api.resend.com/emails", {
+    const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "APlusOptics Orders <orders@aplusoptics.com>",
+        from: "APlusOptics Orders <onboarding@resend.dev>",
         to: [customer_email],
         subject: `Confirm Your APlusOptics Order #${shortOrderId}`,
         html: emailHtml,
       }),
     });
+
+    const resendData = await resendRes.json();
+    if (!resendRes.ok) {
+      console.error("Resend Error:", JSON.stringify(resendData));
+      // Still return success — order is saved. Email issue is secondary.
+    } else {
+      console.log("Email sent successfully via Resend:", resendData.id);
+    }
 
     return new Response(
       JSON.stringify({ success: true, order_id: order.id, message: "Order created. Please check your email to confirm." }),
