@@ -32,7 +32,7 @@ serve(async (req) => {
 
     // 1. INPUT VALIDATION
     if (!product_id || !quantity || !customer_name || !customer_email ||
-        !customer_phone || !address || !city) {
+      !customer_phone || !address || !city) {
       return new Response(
         JSON.stringify({ error: "Missing required fields." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
