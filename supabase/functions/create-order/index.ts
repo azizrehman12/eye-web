@@ -111,7 +111,7 @@ serve(async (req) => {
     if (orderError) {
       console.error("Order insert error:", orderError);
       return new Response(
-        JSON.stringify({ error: "Failed to create order. Please try again." }),
+        JSON.stringify({ error: `Database Error: ${orderError.message || JSON.stringify(orderError)}` }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -219,7 +219,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
   } catch (err) {
     console.error("Unexpected error:", err);
     return new Response(
-      JSON.stringify({ error: "An unexpected error occurred." }),
+      JSON.stringify({ error: `System Error: ${err.message || String(err)}` }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
