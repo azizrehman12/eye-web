@@ -97,10 +97,12 @@ serve(async (req) => {
         customer_email,
         customer_phone,
         address,
+        shipping_address: address, // Fallback for legacy schema
         city,
         notes: notes || null,
         subtotal,
         total,
+        total_amount: total, // Fallback for legacy schema
         status: "pending_confirmation",
         confirmation_token: confirmationToken,
         confirmation_token_expires_at: tokenExpiresAt,
@@ -126,6 +128,7 @@ serve(async (req) => {
         product_sku_snapshot: product.sku || null,
         product_category_snapshot: categoryName,
         unit_price_snapshot: unitPrice,
+        price_at_time: unitPrice, // Fallback for legacy schema
         quantity: qty,
         total: total,
       }]);
