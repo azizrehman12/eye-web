@@ -129,8 +129,7 @@ serve(async (req) => {
         product_category_snapshot: categoryName,
         unit_price_snapshot: unitPrice,
         price_at_time: unitPrice, // Fallback for legacy schema
-        quantity: qty,
-        total: total,
+        quantity: qty
       }]);
 
     if (itemError) {
