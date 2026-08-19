@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY")!;
     const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -62,12 +62,10 @@ serve(async (req) => {
 
     // 4. ATOMIC CONFIRMATION — only succeeds if status is still pending_confirmation
     // The WHERE clause on status prevents race conditions / double-confirmation
-    const confirmedAt = new Date().toISOString();
     const { data: updatedOrder, error: updateError } = await supabase
       .from("orders")
       .update({
         status: "confirmed",
-        confirmed_at: confirmedAt,
         confirmation_token: null,           // Invalidate token immediately
         confirmation_token_expires_at: null,
       })
@@ -137,7 +135,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       ` : ""}
       <div class="row"><span class="label">Total</span><span class="value">Rs. ${parseFloat(order.total).toLocaleString()}</span></div>
       <div class="row"><span class="label">Order Date</span><span class="value">${new Date(order.created_at).toLocaleString()}</span></div>
-      <div class="row"><span class="label">Confirmed At</span><span class="value">${new Date(confirmedAt).toLocaleString()}</span></div>
+      <div class="row"><span class="label">Confirmed At</span><span class="value">${new Date().toLocaleString()}</span></div>
     </div>
   </div>
   <div class="footer">&copy; 2026 APlusOptics</div>
@@ -150,9 +148,9 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "APlusOptics Orders <orders@aplusoptics.com>",
-        to: ["opticsaplus@gmail.com"],
-        subject: `Confirmed Optics Order — #${shortOrderId}`,
+        from: "APlusOptics Orders <onboarding@resend.dev>",
+        to: ["2022n05445@gmail.com"],
+        subject: `New Confirmed Order — #${shortOrderId}`,
         html: ownerEmailHtml,
       }),
     });
@@ -165,7 +163,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
   } catch (err) {
     console.error("Unexpected error:", err);
     return new Response(
-      JSON.stringify({ error: "An unexpected error occurred." }),
+      JSON.stringify({ error: `System Error: ${err.message || String(err)}` }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
