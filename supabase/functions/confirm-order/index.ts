@@ -91,6 +91,20 @@ serve(async (req) => {
     const item = orderItems?.[0];
     const shortOrderId = order.id.split("-")[0].toUpperCase();
 
+    // Fetch the actual product to get its slug for the link
+    let productLink = "Product link unavailable";
+    if (item?.product_id) {
+      const { data: productData } = await supabase
+        .from("products")
+        .select("slug")
+        .eq("id", item.product_id)
+        .single();
+      
+      if (productData?.slug) {
+        productLink = `https://aplusoptics.com/product/${productData.slug}`;
+      }
+    }
+
     // 6. SEND OWNER NOTIFICATION EMAIL
     const ownerEmailHtml = `<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>
@@ -128,6 +142,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       <div class="row"><span class="label">Order ID</span><span class="value">#${shortOrderId}</span></div>
       ${item ? `
       <div class="row"><span class="label">Product</span><span class="value">${item.product_name_snapshot}</span></div>
+      <div class="row"><span class="label">Link</span><span class="value"><a href="${productLink}" target="_blank" style="color:#2563eb;">View Product</a></span></div>
       <div class="row"><span class="label">SKU</span><span class="value">${item.product_sku_snapshot || "N/A"}</span></div>
       <div class="row"><span class="label">Category</span><span class="value">${item.product_category_snapshot || "N/A"}</span></div>
       <div class="row"><span class="label">Quantity</span><span class="value">${item.quantity}</span></div>
