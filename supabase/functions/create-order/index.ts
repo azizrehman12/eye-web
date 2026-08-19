@@ -13,8 +13,7 @@ serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
+    const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY")!;
 
     // Service role client — only used server-side inside this function
     const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -141,7 +140,7 @@ serve(async (req) => {
     }
 
     // 7. SEND CONFIRMATION EMAIL TO CUSTOMER
-    const siteUrl = Deno.env.get("SITE_URL") || "https://eye-web-seven.vercel.app";
+    const siteUrl = Deno.env.get("SITE_URL") || "https://www.aplusoptics.com";
     const confirmUrl = `${siteUrl}/order/confirm?token=${confirmationToken}`;
     const shortOrderId = order.id.split("-")[0].toUpperCase();
 
@@ -187,6 +186,16 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
   </div>
   <div class="footer">&copy; 2026 APlusOptics</div>
 </div></body></html>`;
+
+    // Fetch Resend API Key inside this block
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendApiKey) {
+      console.error("Missing RESEND_API_KEY!");
+      return new Response(
+        JSON.stringify({ error: "Email service is not configured. Please contact support." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     await fetch("https://api.resend.com/emails", {
       method: "POST",
