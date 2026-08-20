@@ -343,7 +343,6 @@ const ProductForm = () => {
               />
             </div>
 
-            {/* Purchase Method */}
             <div className="form-group">
               <label className="form-label">Purchase Method *</label>
               <select
@@ -352,12 +351,11 @@ const ProductForm = () => {
                 value={formData.purchase_method}
                 onChange={handleInputChange}
               >
-                <option value="whatsapp">WhatsApp (Glasses / Rims / Eyeglasses)</option>
-                <option value="direct_order">Direct Order (Sunglasses / Only Frames)</option>
-                <option value="gmail">Gmail (Email Inquiry)</option>
+                <option value="direct_order">Direct Order w/ Email Confirmation (Glasses & Frames)</option>
+                <option value="whatsapp">WhatsApp (Sunglasses & Other Items)</option>
               </select>
               <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
-                WhatsApp: customer gets a pre-filled WhatsApp message. Direct Order: customer fills an order form. Gmail: opens Gmail composer.
+                Direct Order: Customer fills an order form on the site and gets an email confirmation. WhatsApp: Customer gets a pre-filled WhatsApp message.
               </p>
             </div>
 
