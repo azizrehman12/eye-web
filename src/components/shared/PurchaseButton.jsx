@@ -11,7 +11,7 @@ import OrderFormModal from './OrderFormModal';
  * The purchase_method is stored on the product in the DB and set by the admin.
  * It is NEVER hard-coded in this component.
  */
-const PurchaseButton = ({ product, variant = 'full', className = '', selectedLens = null }) => {
+const PurchaseButton = ({ product, variant = 'full', className = '', selectedLens = null, selectedColor = null }) => {
   const [phoneNumber, setPhoneNumber] = useState('923169649626'); // Fallback only
   const [storeEmail, setStoreEmail] = useState('hello@aplusoptics.com'); // Fallback email
   const [orderModalOpen, setOrderModalOpen] = useState(false);
@@ -37,6 +37,10 @@ const PurchaseButton = ({ product, variant = 'full', className = '', selectedLen
 
     let message = `Hello! I am interested in this product.\n\nProduct: ${product.name}\nCategory: ${product.categories?.name || 'N/A'}\nSKU: ${product.sku || 'N/A'}\nBase Price: Rs. ${unitPrice}\n`;
     
+    if (selectedColor) {
+      message += `Selected Color: ${selectedColor}\n`;
+    }
+
     if (selectedLens) {
       message += `Selected Lens: ${selectedLens.name} (+ Rs. ${selectedLens.price})\n`;
       message += `Total Price: Rs. ${unitPrice + selectedLens.price}\n`;
@@ -112,6 +116,7 @@ const PurchaseButton = ({ product, variant = 'full', className = '', selectedLen
             onClose={() => setOrderModalOpen(false)}
             product={product}
             selectedLens={selectedLens}
+            selectedColor={selectedColor}
           />
         </>
       );
@@ -152,6 +157,7 @@ const PurchaseButton = ({ product, variant = 'full', className = '', selectedLen
         onClose={() => setOrderModalOpen(false)}
         product={product}
         selectedLens={selectedLens}
+        selectedColor={selectedColor}
       />
     </>
   );

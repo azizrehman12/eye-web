@@ -34,6 +34,7 @@ const ProductForm = () => {
     frame_type: '',
     frame_material: '',
     frame_color: '',
+    available_colors: '', // Comma-separated string for editing
     lens_type: '',
     lens_features: '',
     size: '',
@@ -59,7 +60,11 @@ const ProductForm = () => {
             const dataToSet = { ...formData };
             Object.keys(dataToSet).forEach(key => {
               if (product[key] !== undefined && product[key] !== null) {
-                dataToSet[key] = product[key];
+                if (key === 'available_colors' && Array.isArray(product[key])) {
+                  dataToSet[key] = product[key].join(', ');
+                } else {
+                  dataToSet[key] = product[key];
+                }
               }
             });
             setFormData(dataToSet);
@@ -113,6 +118,16 @@ const ProductForm = () => {
       submissionData.price = parseFloat(submissionData.price);
       submissionData.sale_price = submissionData.sale_price ? parseFloat(submissionData.sale_price) : null;
       submissionData.stock_quantity = parseInt(submissionData.stock_quantity, 10);
+      
+      // Convert colors string to array
+      if (submissionData.available_colors && typeof submissionData.available_colors === 'string') {
+        submissionData.available_colors = submissionData.available_colors
+          .split(',')
+          .map(c => c.trim())
+          .filter(c => c.length > 0);
+      } else {
+        submissionData.available_colors = [];
+      }
 
       let savedProduct;
       if (isEditing) {
@@ -387,8 +402,18 @@ const ProductForm = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Frame Color</label>
-              <input type="text" name="frame_color" className="form-control" value={formData.frame_color} onChange={handleInputChange} />
+              <label className="form-label">Available Colors</label>
+              <input 
+                type="text" 
+                name="available_colors" 
+                className="form-control" 
+                value={formData.available_colors} 
+                onChange={handleInputChange} 
+                placeholder="e.g. Black, Tortoise, Gold"
+              />
+              <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
+                Enter colors separated by commas. These will appear as selection buttons on the product page.
+              </p>
             </div>
           </div>
 

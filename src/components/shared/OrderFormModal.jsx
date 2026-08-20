@@ -16,7 +16,7 @@ const INITIAL_FORM = {
   notes: '',
 };
 
-const OrderFormModal = ({ isOpen, onClose, product, selectedLens: initialSelectedLens }) => {
+const OrderFormModal = ({ isOpen, onClose, product, selectedLens: initialSelectedLens, selectedColor = null }) => {
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -114,6 +114,7 @@ const OrderFormModal = ({ isOpen, onClose, product, selectedLens: initialSelecte
           name: selectedLens.name,
           price: selectedLens.price
         } : null,
+        selected_color: selectedColor,
       });
 
       setSubmitted(true);
@@ -132,6 +133,10 @@ const OrderFormModal = ({ isOpen, onClose, product, selectedLens: initialSelecte
     
     let message = `Hello! I am interested in this product.\n\nProduct: ${product.name}\nCategory: ${product.categories?.name || 'N/A'}\nSKU: ${product.sku || 'N/A'}\nBase Price: Rs. ${unitPrice}\n`;
     
+    if (selectedColor) {
+      message += `Selected Color: ${selectedColor}\n`;
+    }
+
     if (isCustomLens) {
       message += `Selected Lens: ${selectedLens.name} (+ Rs. ${selectedLens.price})\n`;
       message += `Total Price: Rs. ${unitPrice + lensPrice}\n`;
@@ -208,6 +213,11 @@ const OrderFormModal = ({ isOpen, onClose, product, selectedLens: initialSelecte
                     {product.categories?.name && `${product.categories.name} · `}
                     {product.sku && `SKU: ${product.sku}`}
                   </p>
+                  {selectedColor && (
+                    <p className="order-product-summary__meta" style={{ marginTop: 2 }}>
+                      Color: <strong>{selectedColor}</strong>
+                    </p>
+                  )}
                   {isCustomLens && (
                     <p className="order-product-summary__meta" style={{ color: '#dc2626', marginTop: 4 }}>
                       + Lens: {selectedLens.name} (Rs. {selectedLens.price})

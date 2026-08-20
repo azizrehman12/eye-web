@@ -29,6 +29,7 @@ serve(async (req) => {
       city,
       notes,
       lens_details,
+      selected_color,
     } = body;
 
     // 1. INPUT VALIDATION
@@ -86,6 +87,11 @@ serve(async (req) => {
     const total = subtotal;
 
     const categoryName = product.categories?.name || "N/A";
+    
+    // Append color to product name snapshot if selected
+    const productNameSnapshot = selected_color 
+      ? `${product.name} (Color: ${selected_color})`
+      : product.name;
 
     // 4. GENERATE CONFIRMATION TOKEN (cryptographically secure, server-side only)
     const confirmationToken = crypto.randomUUID();
@@ -127,7 +133,7 @@ serve(async (req) => {
       .insert([{
         order_id: order.id,
         product_id: product.id,
-        product_name_snapshot: product.name,
+        product_name_snapshot: productNameSnapshot,
         product_sku_snapshot: product.sku || null,
         product_category_snapshot: categoryName,
         unit_price_snapshot: unitPrice,
@@ -175,6 +181,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       <div class="row"><span class="label">Product</span><span class="value">${product.name}</span></div>
       <div class="row"><span class="label">SKU</span><span class="value">${product.sku || "N/A"}</span></div>
       <div class="row"><span class="label">Category</span><span class="value">${categoryName}</span></div>
+      ${selected_color ? `<div class="row"><span class="label">Color</span><span class="value">${selected_color}</span></div>` : ""}
       <div class="row"><span class="label">Quantity</span><span class="value">${qty}</span></div>
       <div class="row"><span class="label">Unit Price</span><span class="value">Rs. ${unitPrice.toLocaleString()}</span></div>
       ${lens_details ? `<div class="row"><span class="label">Lens Option</span><span class="value">${lens_details.name} (+ Rs. ${lensPrice.toLocaleString()})</span></div>` : ""}

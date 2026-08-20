@@ -16,6 +16,8 @@ const ProductDetails = () => {
   
   const [lenses, setLenses] = useState([]);
   const [selectedLens, setSelectedLens] = useState(null);
+  
+  const [selectedColor, setSelectedColor] = useState(null);
 
   useEffect(() => {
     const fetchProductAndLenses = async () => {
@@ -56,6 +58,10 @@ const ProductDetails = () => {
           setLenses([]);
           setSelectedLens(null);
         }
+        if (productData.available_colors && Array.isArray(productData.available_colors) && productData.available_colors.length > 0) {
+          setSelectedColor(productData.available_colors[0]);
+        }
+
       } catch (err) {
         console.error("Failed to fetch product data", err);
         setError("Product not found or an error occurred.");
@@ -63,11 +69,32 @@ const ProductDetails = () => {
         setLoading(false);
       }
     };
+
     fetchProductAndLenses();
   }, [slug]);
 
+  // Slideshow Effect
+  useEffect(() => {
+    let intervalId;
+    if (product && product.images && product.images.length > 1) {
+      intervalId = setInterval(() => {
+        setActiveImage(prevImage => {
+          const currentIndex = product.images.findIndex(img => img.image_url === prevImage);
+          // If for some reason not found, start at 0
+          if (currentIndex === -1) return product.images[0].image_url;
+          
+          const nextIndex = (currentIndex + 1) % product.images.length;
+          return product.images[nextIndex].image_url;
+        });
+      }, 3000);
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [product]);
+
   if (loading) {
-    return <div className="container section-padding text-center">Loading product...</div>;
+    return <div className="container section-padding text-center">Loading product details...</div>;
   }
 
   if (error || !product) {
@@ -88,8 +115,28 @@ const ProductDetails = () => {
         {/* Left Column - Gallery */}
         <div className="left-column">
           <div className="product-image-container">
-
-            <img src={activeImage} alt={product.name} />
+            {product.images && product.images.length > 0 ? (
+              product.images.map((img, index) => (
+                <img
+                  key={img.id || index}
+                  src={img.image_url}
+                  alt={`${product.name} - view ${index + 1}`}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    opacity: activeImage === img.image_url ? 1 : 0,
+                    transition: 'opacity 0.8s ease-in-out',
+                    zIndex: activeImage === img.image_url ? 1 : 0
+                  }}
+                />
+              ))
+            ) : (
+              <img src={activeImage} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            )}
           </div>
 
           {product.images && product.images.length > 0 && (
@@ -182,6 +229,40 @@ const ProductDetails = () => {
 
           <div className="section-divider"></div>
 
+          {/* Color Selection Section */}
+          {product.available_colors && Array.isArray(product.available_colors) && product.available_colors.length > 0 && (
+            <>
+              <div className="color-selection-section">
+                <h4 className="pd-outfit" style={{ fontSize: '16px', marginBottom: '8px', color: '#0f172a' }}>
+                  Select Color: <span style={{ fontWeight: 'normal', color: '#64748b' }}>{selectedColor}</span>
+                </h4>
+                <div className="color-options-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {product.available_colors.map((color) => (
+                    <button
+                      key={color}
+                      className={`color-btn ${selectedColor === color ? 'selected' : ''}`}
+                      onClick={() => setSelectedColor(color)}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '14px',
+                        border: selectedColor === color ? '2px solid #0f172a' : '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        background: selectedColor === color ? '#f8fafc' : '#ffffff',
+                        color: '#0f172a',
+                        fontWeight: selectedColor === color ? '600' : '400',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="section-divider"></div>
+            </>
+          )}
+
           {/* Details Section */}
           <div className="details-section">
             <h2 className="section-title pd-outfit">Details</h2>
@@ -224,7 +305,7 @@ const ProductDetails = () => {
           {/* Checkout Actions */}
           <div className="checkout-actions mt-4">
             <div className="place-order-btn-wrapper">
-              <PurchaseButton product={product} variant="full" selectedLens={selectedLens} />
+              <PurchaseButton product={product} variant="full" selectedLens={selectedLens} selectedColor={selectedColor} />
             </div>
 
             <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="whatsapp-assist" title="Contact on WhatsApp">

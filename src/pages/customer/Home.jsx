@@ -238,7 +238,7 @@ const Home = () => {
           <div className="story-signature">
             <span className="signature-name">Ibad Ullah Khan</span>
             <div className="signature-dot"></div>
-            <span className="signature-title">Founder & Chief Optician</span>
+            <span className="signature-title">Founder</span>
           </div>
         </div>
       </section>
@@ -246,7 +246,7 @@ const Home = () => {
       {/* Why Choose Us Section */}
       <section className="why-choose-us">
         <div className="why-heading-container">
-          <h2 className="why-title">Why Eye Specialists Trust OptiVue</h2>
+          <h2 className="why-title">Why Eye Specialists Trust Aplusoptics</h2>
           <p className="why-subtitle">Engineered for ocular precision, curated for aesthetic distinction</p>
         </div>
         <div className="why-columns-row">
@@ -325,7 +325,7 @@ const Home = () => {
               <p className="badge-text">DIRECT NURSE & OPTICIAN HELPLINE</p>
             </div>
             <h2 className="whatsapp-heading">Need Help Choosing Your Frame or Lens?</h2>
-            <p className="whatsapp-desc">Chat live with a certified OptiVue optical specialist on WhatsApp. Send us your prescription photo, and we will recommend the perfect lens parameters for you.</p>
+            <p className="whatsapp-desc">Chat live with a certified Aplusoptics optical specialist on WhatsApp. Send us your prescription photo, and we will recommend the perfect lens parameters for you.</p>
           </div>
           <WhatsAppButton className="whatsapp-cta-button">
             <Phone size={20} color="#FFFFFF" strokeWidth={2} />
