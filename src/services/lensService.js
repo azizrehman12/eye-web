@@ -11,8 +11,8 @@ export const lensService = {
       .order('price', { ascending: true });
 
     if (categoryId) {
-      // Filter lenses where the JSONB array 'category_ids' contains the given categoryId
-      query = query.contains('category_ids', [categoryId]);
+      // Pass a JSON array string to ensure correct JSONB 'contains' matching in Supabase
+      query = query.contains('category_ids', `["${categoryId}"]`);
     }
 
     const { data, error } = await query;

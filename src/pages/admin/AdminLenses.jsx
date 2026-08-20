@@ -94,13 +94,17 @@ const AdminLenses = () => {
       id: lens.id,
       name: lens.name || '',
       price: lens.price || 0,
-      features: Array.isArray(lens.features) ? lens.features.join('\n') : '',
+      features: (lens.features && typeof lens.features === 'string') 
+        ? lens.features 
+        : (Array.isArray(lens.features) ? lens.features.join('\n') : ''),
       active: lens.active !== false,
       category_ids: Array.isArray(lens.category_ids) ? lens.category_ids : []
     });
     setIsEditing(true);
     setIsFormOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {}
   };
 
   const handleDelete = async (id) => {
@@ -156,7 +160,7 @@ const AdminLenses = () => {
                     type="text"
                     name="name"
                     className="form-control"
-                    value={formData.name}
+                    value={formData.name || ''}
                     onChange={handleInputChange}
                     placeholder="e.g. Transition Anti Glare"
                     required
@@ -168,7 +172,7 @@ const AdminLenses = () => {
                     type="number"
                     name="price"
                     className="form-control"
-                    value={formData.price}
+                    value={formData.price || 0}
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
@@ -183,7 +187,7 @@ const AdminLenses = () => {
                   name="features"
                   className="form-control"
                   rows="4"
-                  value={formData.features}
+                  value={formData.features || ''}
                   onChange={handleInputChange}
                   placeholder="Turn dark grey in sunlight&#10;Fine Quality&#10;Standard Thickness"
                 ></textarea>
@@ -199,7 +203,7 @@ const AdminLenses = () => {
                     <label key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', cursor: 'pointer' }}>
                       <input 
                         type="checkbox"
-                        checked={formData.category_ids.includes(cat.id)}
+                        checked={Array.isArray(formData.category_ids) && formData.category_ids.includes(cat.id)}
                         onChange={() => handleCategoryChange(cat.id)}
                       />
                       {cat.name}

@@ -29,8 +29,12 @@ const ProductDetails = () => {
         // Now fetch lenses ONLY if the product has a category
         let activeLenses = [];
         if (productData.category_id) {
-          const lensesData = await lensService.getAllLenses(productData.category_id);
-          activeLenses = lensesData.filter(l => l.active);
+          try {
+            const lensesData = await lensService.getAllLenses(productData.category_id);
+            activeLenses = lensesData.filter(l => l.active);
+          } catch (lensErr) {
+            console.error("Failed to fetch lenses, continuing without them", lensErr);
+          }
         }
         
         if (activeLenses.length > 0) {
