@@ -6,6 +6,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function getServiceRoleKey(): string {
+  return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SERVICE_ROLE_KEY") || "";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -13,8 +17,15 @@ serve(async (req) => {
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY")!;
-    const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
+    const serviceRoleKey = getServiceRoleKey();
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+    if (!serviceRoleKey) {
+      return new Response(
+        JSON.stringify({ error: "Server Configuration Error: service role key is missing." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
@@ -43,6 +54,17 @@ serve(async (req) => {
     }
 
     // 2. CHECK ALREADY CONFIRMED
+    if (order.status === "confirmed") {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          already_confirmed: true,
+          message: "This order has already been confirmed.",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     if (order.status !== "pending_confirmation") {
       return new Response(
         JSON.stringify({ error: "This order has already been confirmed or cancelled." }),
@@ -51,34 +73,58 @@ serve(async (req) => {
     }
 
     // 3. CHECK TOKEN EXPIRY
-    const now = new Date();
-    const expiresAt = new Date(order.confirmation_token_expires_at);
-    if (now > expiresAt) {
-      return new Response(
-        JSON.stringify({ error: "This confirmation link has expired. Please contact us." }),
-        { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    if (order.confirmation_token_expires_at) {
+      const now = new Date();
+      const expiresAt = new Date(order.confirmation_token_expires_at);
+      if (now > expiresAt) {
+        return new Response(
+          JSON.stringify({ error: "This confirmation link has expired. Please contact us." }),
+          { status: 410, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
+    const confirmedAt = new Date().toISOString();
+
     // 4. ATOMIC CONFIRMATION — only succeeds if status is still pending_confirmation
-    // The WHERE clause on status prevents race conditions / double-confirmation
-    const { data: updatedOrder, error: updateError } = await supabase
+    const { data: updatedOrders, error: updateError } = await supabase
       .from("orders")
       .update({
         status: "confirmed",
-        confirmation_token: null,           // Invalidate token immediately
-        confirmation_token_expires_at: null,
+        confirmed_at: confirmedAt,
       })
       .eq("id", order.id)
-      .eq("status", "pending_confirmation") // Atomic guard against double-confirmation
-      .eq("confirmation_token", token)       // Must match exact token
-      .select()
-      .single();
+      .eq("status", "pending_confirmation")
+      .select();
 
-    if (updateError || !updatedOrder) {
+    if (updateError) {
+      console.error("Update error:", updateError);
+
+      if (updateError.code === "PGRST116") {
+        return new Response(
+          JSON.stringify({
+            success: true,
+            already_confirmed: true,
+            message: "This order has already been confirmed.",
+          }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       return new Response(
-        JSON.stringify({ error: "Could not confirm order. It may have already been confirmed." }),
-        { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Database error during confirmation. Please try again." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!updatedOrders || updatedOrders.length === 0) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          already_confirmed: true,
+          message: "This order has already been confirmed.",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -88,24 +134,35 @@ serve(async (req) => {
       .select("*")
       .eq("order_id", order.id);
 
-    const item = orderItems?.[0];
     const shortOrderId = order.id.split("-")[0].toUpperCase();
+    const siteUrl = Deno.env.get("SITE_URL") || "https://aplusoptics.com";
+    const deliveryCharges = 300;
+    const subtotal = parseFloat(order.subtotal ?? (parseFloat(order.total) - deliveryCharges));
 
-    // Fetch the actual product to get its slug for the link
-    let productLink = "Product link unavailable";
-    if (item?.product_id) {
-      const { data: productData } = await supabase
-        .from("products")
-        .select("slug")
-        .eq("id", item.product_id)
-        .single();
-      
-      if (productData?.slug) {
-        productLink = `https://aplusoptics.com/products/${productData.slug}`;
-      }
-    }
+    const productIds = (orderItems || []).map((item) => item.product_id).filter(Boolean);
+    const { data: productsData } = productIds.length
+      ? await supabase.from("products").select("id, slug").in("id", productIds)
+      : { data: [] };
 
-    // 6. SEND OWNER NOTIFICATION EMAIL
+    const slugByProductId = new Map((productsData || []).map((p) => [p.id, p.slug]));
+
+    let itemsHtml = "";
+    (orderItems || []).forEach((item) => {
+      const slug = slugByProductId.get(item.product_id);
+      const productLink = slug ? `${siteUrl}/products/${slug}` : "Product link unavailable";
+
+      itemsHtml += `
+      <div style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+        <div style="font-weight: 600; color: #0f172a;">${item.product_name_snapshot || "Product"}</div>
+        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+          Category: ${item.product_category_snapshot || "N/A"}<br>
+          SKU: ${item.product_sku_snapshot || "N/A"}<br>
+          Qty: ${item.quantity} &times; Rs. ${parseFloat(item.unit_price_snapshot || 0).toLocaleString()}<br>
+          <a href="${productLink}" target="_blank" style="color:#2563eb;">View Product</a>
+        </div>
+      </div>`;
+    });
+
     const ownerEmailHtml = `<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>
 body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
@@ -132,43 +189,46 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       <div class="row"><span class="label">Name</span><span class="value">${order.customer_name}</span></div>
       <div class="row"><span class="label">Email</span><span class="value">${order.customer_email}</span></div>
       <div class="row"><span class="label">Phone</span><span class="value">${order.customer_phone}</span></div>
-      <div class="row"><span class="label">Address</span><span class="value">${order.address}</span></div>
+      <div class="row"><span class="label">Address</span><span class="value">${order.address || order.shipping_address || "N/A"}</span></div>
       <div class="row"><span class="label">City</span><span class="value">${order.city}</span></div>
       ${order.notes ? `<div class="row"><span class="label">Notes</span><span class="value">${order.notes}</span></div>` : ""}
     </div>
 
-    <div class="section-title">Order Details</div>
+    <div class="section-title">Order Details (#${shortOrderId})</div>
     <div class="order-box">
-      <div class="row"><span class="label">Order ID</span><span class="value">#${shortOrderId}</span></div>
-      ${item ? `
-      <div class="row"><span class="label">Product</span><span class="value">${item.product_name_snapshot}</span></div>
-      <div class="row"><span class="label">Link</span><span class="value"><a href="${productLink}" target="_blank" style="color:#2563eb;">View Product</a></span></div>
-      <div class="row"><span class="label">SKU</span><span class="value">${item.product_sku_snapshot || "N/A"}</span></div>
-      <div class="row"><span class="label">Category</span><span class="value">${item.product_category_snapshot || "N/A"}</span></div>
-      <div class="row"><span class="label">Quantity</span><span class="value">${item.quantity}</span></div>
-      <div class="row"><span class="label">Unit Price</span><span class="value">Rs. ${parseFloat(item.unit_price_snapshot).toLocaleString()}</span></div>
-      ` : ""}
-      <div class="row"><span class="label">Total</span><span class="value">Rs. ${parseFloat(order.total).toLocaleString()}</span></div>
+      ${itemsHtml}
+      <div class="row" style="margin-top: 16px;"><span class="label">Subtotal</span><span class="value">Rs. ${subtotal.toLocaleString()}</span></div>
+      <div class="row"><span class="label">Delivery Charges</span><span class="value">Rs. ${deliveryCharges.toLocaleString()}</span></div>
+      <div class="row"><span class="label">Grand Total</span><span class="value">Rs. ${parseFloat(order.total || order.total_amount || 0).toLocaleString()}</span></div>
       <div class="row"><span class="label">Order Date</span><span class="value">${new Date(order.created_at).toLocaleString()}</span></div>
-      <div class="row"><span class="label">Confirmed At</span><span class="value">${new Date().toLocaleString()}</span></div>
+      <div class="row"><span class="label">Confirmed At</span><span class="value">${new Date(confirmedAt).toLocaleString()}</span></div>
     </div>
   </div>
-  <div class="footer">&copy; 2026 APlusOptics</div>
+  <div class="footer">&copy; ${new Date().getFullYear()} APlusOptics</div>
 </div></body></html>`;
 
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "APlusOptics Orders <orders@aplusoptics.com>",
-        to: ["opticsaplus@gmail.com"],
-        subject: `New Confirmed Order — #${shortOrderId}`,
-        html: ownerEmailHtml,
-      }),
-    });
+    if (resendApiKey) {
+      const resendRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "APlusOptics Orders <orders@aplusoptics.com>",
+          to: ["opticsaplus@gmail.com"],
+          subject: `New Confirmed Order — #${shortOrderId}`,
+          html: ownerEmailHtml,
+        }),
+      });
+
+      if (!resendRes.ok) {
+        const resendData = await resendRes.json();
+        console.error("Owner notification email failed:", JSON.stringify(resendData));
+      }
+    } else {
+      console.error("RESEND_API_KEY missing — owner notification not sent.");
+    }
 
     return new Response(
       JSON.stringify({ success: true, message: "Order confirmed successfully." }),
