@@ -84,39 +84,6 @@ const Home = () => {
         />
       </section>
 
-      {/* Features Banner */}
-      <section className="features-section">
-        <div className="features-banner">
-          <div className="feature-banner-card">
-            <div className="feature-banner-icon"><Truck size={24} strokeWidth={2} /></div>
-            <div className="feature-banner-text">
-              <h3 className="feature-banner-title">Free Shipping</h3>
-              <p className="feature-banner-subtitle">Fast & trackable door-to-door delivery</p>
-            </div>
-          </div>
-          <div className="feature-banner-card">
-            <div className="feature-banner-icon"><RefreshCw size={24} strokeWidth={2} /></div>
-            <div className="feature-banner-text">
-              <h3 className="feature-banner-title">30-Day Returns</h3>
-              <p className="feature-banner-subtitle">Easy risk-free exchange or refunds</p>
-            </div>
-          </div>
-          <div className="feature-banner-card">
-            <div className="feature-banner-icon"><ShieldCheck size={24} strokeWidth={2} /></div>
-            <div className="feature-banner-text">
-              <h3 className="feature-banner-title">Certified Lenses</h3>
-              <p className="feature-banner-subtitle">Premium clinical quality assurance</p>
-            </div>
-          </div>
-          <div className="feature-banner-card">
-            <div className="feature-banner-icon"><User size={24} strokeWidth={2} /></div>
-            <div className="feature-banner-text">
-              <h3 className="feature-banner-title">Expert Support</h3>
-              <p className="feature-banner-subtitle">Online consultation with opticians</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Categories Section */}
       <section className="categories-section">
@@ -133,7 +100,7 @@ const Home = () => {
                 to={`/category/${cat.slug}`}
                 className="category-card"
                 aria-label={cat.name}
-                style={cat.image_url?.endsWith('.svg') ? { 
+                style={cat.image_url?.endsWith('.svg') ? {
                   backgroundImage: `url('${cat.image_url}')`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
@@ -269,7 +236,7 @@ const Home = () => {
           <h2 className="story-heading">Clinical Excellence Meets High Fashion</h2>
           <p className="story-paragraph">APlusOptics was founded with a singular purpose: to bridge the gap between clinical optical expertise and refined contemporary aesthetics. Every frame is hand-selected in Italy, while each premium lens is custom-cut in our labs to match your exact prescription parameters. We believe vision correction shouldn't hide your character — it should define it.</p>
           <div className="story-signature">
-            <span className="signature-name">Dr. Marcus Sterling</span>
+            <span className="signature-name">Ibad Ullah Khan</span>
             <div className="signature-dot"></div>
             <span className="signature-title">Founder & Chief Optician</span>
           </div>
@@ -310,6 +277,40 @@ const Home = () => {
             <div className="column-text">
               <h3 className="column-title">Expert Consultation</h3>
               <p className="column-desc">Not sure about your lens type? Book a direct session with our registered opticians for clear guidance and recommendations.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Banner */}
+      <section className="features-section">
+        <div className="features-banner">
+          <div className="feature-banner-card">
+            <div className="feature-banner-icon"><Truck size={24} strokeWidth={2} /></div>
+            <div className="feature-banner-text">
+              <h3 className="feature-banner-title">Free Shipping</h3>
+              <p className="feature-banner-subtitle">Fast & trackable door-to-door delivery</p>
+            </div>
+          </div>
+          <div className="feature-banner-card">
+            <div className="feature-banner-icon"><RefreshCw size={24} strokeWidth={2} /></div>
+            <div className="feature-banner-text">
+              <h3 className="feature-banner-title">7-Day Returns</h3>
+              <p className="feature-banner-subtitle">except the lens along with customized lens </p>
+            </div>
+          </div>
+          <div className="feature-banner-card">
+            <div className="feature-banner-icon"><ShieldCheck size={24} strokeWidth={2} /></div>
+            <div className="feature-banner-text">
+              <h3 className="feature-banner-title">Certified Lenses</h3>
+              <p className="feature-banner-subtitle">Premium clinical quality assurance</p>
+            </div>
+          </div>
+          <div className="feature-banner-card">
+            <div className="feature-banner-icon"><User size={24} strokeWidth={2} /></div>
+            <div className="feature-banner-text">
+              <h3 className="feature-banner-title">Expert Support</h3>
+              <p className="feature-banner-subtitle">Online consultation with opticians</p>
             </div>
           </div>
         </div>

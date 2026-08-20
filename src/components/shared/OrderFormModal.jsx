@@ -14,7 +14,7 @@ const INITIAL_FORM = {
   notes: '',
 };
 
-const OrderFormModal = ({ isOpen, onClose, product }) => {
+const OrderFormModal = ({ isOpen, onClose, product, selectedLens }) => {
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -28,7 +28,10 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
   const unitPrice = product.sale_price && product.sale_price < product.price
     ? parseFloat(product.sale_price)
     : parseFloat(product.price);
-  const total = (unitPrice * (parseInt(form.quantity, 10) || 1)).toFixed(2);
+  const lensPrice = selectedLens ? parseFloat(selectedLens.price) || 0 : 0;
+  const quantity = parseInt(form.quantity, 10) || 1;
+  const subTotal = (unitPrice + lensPrice) * quantity;
+  const total = subTotal.toFixed(2);
 
   const validate = () => {
     const errs = {};
@@ -69,6 +72,11 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
         address: form.address,
         city: form.city,
         notes: form.notes,
+        lensDetails: selectedLens ? {
+          id: selectedLens.id,
+          name: selectedLens.name,
+          price: selectedLens.price
+        } : null,
       });
 
       setSubmitted(true);
@@ -136,8 +144,15 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
                     {product.categories?.name && `${product.categories.name} · `}
                     {product.sku && `SKU: ${product.sku}`}
                   </p>
+                  {selectedLens && (
+                    <p className="order-product-summary__meta" style={{ color: '#dc2626', marginTop: 4 }}>
+                      + Lens: {selectedLens.name} (Rs. {selectedLens.price})
+                    </p>
+                  )}
                 </div>
-                <span className="order-product-summary__price">Rs. {unitPrice.toLocaleString()}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <span className="order-product-summary__price">Rs. {unitPrice.toLocaleString()}</span>
+                </div>
               </div>
 
               {/* Server Error */}
@@ -272,7 +287,7 @@ const OrderFormModal = ({ isOpen, onClose, product }) => {
               {/* Total */}
               <div className="order-total-row">
                 <span className="order-total-row__label">
-                  Rs. {unitPrice.toLocaleString()} × {parseInt(form.quantity, 10) || 1} = Total
+                  (Rs. {unitPrice.toLocaleString()} {selectedLens ? `+ Rs. ${lensPrice}` : ''}) × {quantity} = Total
                 </span>
                 <span className="order-total-row__amount">Rs. {parseFloat(total).toLocaleString()}</span>
               </div>

@@ -65,10 +65,10 @@ const Footer = () => (
       <div className="footer-col-links">
         <h3 className="footer-col-title">Quick Links</h3>
         <ul className="link-items">
+          <li><Link to="/about">About Us</Link></li>
           <li><Link to="/products">Shop Eyewear</Link></li>
           <li><Link to="/products?filter=best-sellers">Best Sellers</Link></li>
           <li><Link to="/products?filter=new-arrivals">New Arrivals</Link></li>
-          <li><Link to="/guide">Lens Guide</Link></li>
           <li><Link to="/offers">Special Offers</Link></li>
         </ul>
       </div>
@@ -77,7 +77,8 @@ const Footer = () => (
         <h3 className="footer-col-title">Customer Service</h3>
         <ul className="link-items">
           <li><Link to="/contact">Contact Us</Link></li>
-          <li><Link to="/prescription">Prescription Guide</Link></li>
+          <li><Link to="/contact">Lens Guide</Link></li>
+          <li><Link to="/contact">Prescription Guide</Link></li>
           <li><Link to="/shipping">Shipping & Delivery</Link></li>
           <li><Link to="/returns">Returns & Exchanges</Link></li>
           <li><Link to="/faq">FAQs</Link></li>

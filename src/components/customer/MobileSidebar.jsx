@@ -43,9 +43,9 @@ const MobileSidebar = ({ isOpen, onClose }) => {
       />
       
       <aside className={`mobile-sidebar ${isOpen ? 'is-open' : ''}`}>
-        <div className="mobile-sidebar__header">
-          <h2>Premium Optics</h2>
-          <button onClick={onClose} className="mobile-sidebar__close" aria-label="Close menu">
+        <div className="mobile-sidebar__header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px' }}>
+          <img src="/logo.jpeg" alt="APlusOptics" style={{ height: '60px', width: 'auto', display: 'block', margin: '-10px 0' }} />
+          <button onClick={onClose} className="mobile-sidebar__close" aria-label="Close menu" style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
             <X size={24} />
           </button>
         </div>

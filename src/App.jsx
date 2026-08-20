@@ -10,6 +10,8 @@ import AdminLayout from './layouts/AdminLayout';
 import Home from './pages/customer/Home';
 import Products from './pages/customer/Products';
 import ProductDetails from './pages/customer/ProductDetails';
+import About from './pages/customer/About';
+import Contact from './pages/customer/Contact';
 import NotFound from './pages/customer/NotFound';
 
 import AdminLogin from './pages/admin/AdminLogin';
@@ -17,6 +19,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import ProductForm from './pages/admin/ProductForm';
 import AdminCategories from './pages/admin/AdminCategories';
+import AdminLenses from './pages/admin/AdminLenses';
 import AdminOrders from './pages/admin/AdminOrders';
 import OrderConfirmation from './pages/customer/OrderConfirmation';
 
@@ -49,6 +52,8 @@ function App() {
             <Route path="products/:id" element={<ProductDetails />} />
             <Route path="category/:slug" element={<Products />} />
             <Route path="order/confirm" element={<OrderConfirmation />} />
+            <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Route>
 
@@ -66,6 +71,7 @@ function App() {
             <Route path="products/new" element={<ProductForm />} />
             <Route path="products/edit/:id" element={<ProductForm />} />
             <Route path="categories" element={<AdminCategories />} />
+            <Route path="lenses" element={<AdminLenses />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>

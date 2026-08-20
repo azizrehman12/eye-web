@@ -40,7 +40,7 @@ const AdminLogin = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>Premium Optics Admin</h1>
+          <h1>APlusOptics Admin</h1>
           <p>Sign in to access the dashboard</p>
         </div>
 

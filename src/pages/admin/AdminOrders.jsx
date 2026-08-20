@@ -252,6 +252,14 @@ const AdminOrders = () => {
                                 <div className="order-detail-row-item"><span className="label">Category</span><span className="value">{item.product_category_snapshot || '—'}</span></div>
                                 <div className="order-detail-row-item"><span className="label">Unit Price</span><span className="value">Rs. {parseFloat(item.unit_price_snapshot).toLocaleString()}</span></div>
                                 <div className="order-detail-row-item"><span className="label">Quantity</span><span className="value">{item.quantity}</span></div>
+                                {order.lens_details && (
+                                  <div className="order-detail-row-item">
+                                    <span className="label">Lens Option</span>
+                                    <span className="value" style={{ color: '#dc2626', fontWeight: 600 }}>
+                                      {order.lens_details.name} (+ Rs. {parseFloat(order.lens_details.price).toLocaleString()})
+                                    </span>
+                                  </div>
+                                )}
                                 <div className="order-detail-row-item"><span className="label">Total</span><span className="value" style={{ fontWeight: 700, color: '#2563EB' }}>Rs. {parseFloat(order.total).toLocaleString()}</span></div>
                               </div>
                             )}

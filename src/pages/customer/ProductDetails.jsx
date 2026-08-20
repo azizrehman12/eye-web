@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Phone } from 'lucide-react';
 import { productService } from '../../services/productService';
+import { lensService } from '../../services/lensService';
 import PurchaseButton from '../../components/shared/PurchaseButton';
 import '../../styles/product-details.css';
 
@@ -12,22 +13,53 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeImage, setActiveImage] = useState(null);
+  
+  const [lenses, setLenses] = useState([]);
+  const [selectedLens, setSelectedLens] = useState(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductAndLenses = async () => {
       try {
-        const data = await productService.getProductBySlug(slug);
-        setProduct(data);
-        const primaryImage = data.images?.find(img => img.is_primary) || data.images?.[0];
+        const productData = await productService.getProductBySlug(slug);
+        setProduct(productData);
+        
+        const primaryImage = productData.images?.find(img => img.is_primary) || productData.images?.[0];
         setActiveImage(primaryImage ? primaryImage.image_url : '/placeholder-glasses.jpg');
+        
+        // Now fetch lenses ONLY if the product has a category
+        let activeLenses = [];
+        if (productData.category_id) {
+          const lensesData = await lensService.getAllLenses(productData.category_id);
+          activeLenses = lensesData.filter(l => l.active);
+        }
+        
+        if (activeLenses.length > 0) {
+          // Add default "No Lens Selected" option at the beginning
+          const defaultNoLens = {
+            id: 'no-lens-default',
+            name: 'No Lens Selected',
+            price: 0,
+            features: [
+              'No extra lens added',
+              'Frame with standard lenses'
+            ]
+          };
+          
+          const lensesWithDefault = [defaultNoLens, ...activeLenses];
+          setLenses(lensesWithDefault);
+          setSelectedLens(defaultNoLens);
+        } else {
+          setLenses([]);
+          setSelectedLens(null);
+        }
       } catch (err) {
-        console.error("Failed to fetch product", err);
+        console.error("Failed to fetch product data", err);
         setError("Product not found or an error occurred.");
       } finally {
         setLoading(false);
       }
     };
-    fetchProduct();
+    fetchProductAndLenses();
   }, [slug]);
 
   if (loading) {
@@ -154,10 +186,41 @@ const ProductDetails = () => {
             </p>
           </div>
 
+          <div className="section-divider"></div>
+
+          {/* Prescription/Eyesight Lenses Section */}
+          {product?.purchase_method === 'direct_order' && lenses.length > 0 && (
+            <div className="lenses-section">
+              <h2 className="section-title pd-outfit">Prescription/Eyesight Lenses:</h2>
+              <p style={{ fontSize: 13, color: '#dc2626', marginBottom: 16 }}>Note: Cylinder value above 2 may incur additional charges</p>
+              
+              <div className="lenses-scroll-container">
+                {lenses.map(lens => (
+                  <div 
+                    key={lens.id} 
+                    className={`lens-card ${selectedLens?.id === lens.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedLens(lens)}
+                  >
+                    <div className="lens-card-header">
+                      <h4 className="lens-title">{lens.name} + Rs. {lens.price}</h4>
+                    </div>
+                    <div className="lens-card-body">
+                      <ul>
+                        {Array.isArray(lens.features) && lens.features.map((feature, i) => (
+                          <li key={i}>{feature}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Checkout Actions */}
-          <div className="checkout-actions">
+          <div className="checkout-actions mt-4">
             <div className="place-order-btn-wrapper">
-              <PurchaseButton product={product} variant="full" />
+              <PurchaseButton product={product} variant="full" selectedLens={selectedLens} />
             </div>
 
             <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="whatsapp-assist" title="Contact on WhatsApp">

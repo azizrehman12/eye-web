@@ -28,6 +28,7 @@ serve(async (req) => {
       address,
       city,
       notes,
+      lens_details,
     } = body;
 
     // 1. INPUT VALIDATION
@@ -80,7 +81,8 @@ serve(async (req) => {
       ? parseFloat(product.sale_price)
       : parseFloat(product.price);
 
-    const subtotal = parseFloat((unitPrice * qty).toFixed(2));
+    const lensPrice = lens_details?.price ? parseFloat(lens_details.price) : 0;
+    const subtotal = parseFloat(((unitPrice + lensPrice) * qty).toFixed(2));
     const total = subtotal;
 
     const categoryName = product.categories?.name || "N/A";
@@ -100,6 +102,7 @@ serve(async (req) => {
         shipping_address: address, // Fallback for legacy schema
         city,
         notes: notes || null,
+        lens_details: lens_details || null,
         subtotal,
         total,
         total_amount: total, // Fallback for legacy schema
@@ -174,6 +177,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       <div class="row"><span class="label">Category</span><span class="value">${categoryName}</span></div>
       <div class="row"><span class="label">Quantity</span><span class="value">${qty}</span></div>
       <div class="row"><span class="label">Unit Price</span><span class="value">Rs. ${unitPrice.toLocaleString()}</span></div>
+      ${lens_details ? `<div class="row"><span class="label">Lens Option</span><span class="value">${lens_details.name} (+ Rs. ${lensPrice.toLocaleString()})</span></div>` : ""}
       <div class="row"><span class="label">Total</span><span class="value">Rs. ${total.toLocaleString()}</span></div>
     </div>
     <div class="order-box">
