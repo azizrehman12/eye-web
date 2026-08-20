@@ -354,9 +354,10 @@ const ProductForm = () => {
               >
                 <option value="whatsapp">WhatsApp (Glasses / Rims / Eyeglasses)</option>
                 <option value="direct_order">Direct Order (Sunglasses / Only Frames)</option>
+                <option value="gmail">Gmail (Email Inquiry)</option>
               </select>
               <p style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>
-                WhatsApp: customer gets a pre-filled WhatsApp message. Direct Order: customer fills an order form on the website.
+                WhatsApp: customer gets a pre-filled WhatsApp message. Direct Order: customer fills an order form. Gmail: opens Gmail composer.
               </p>
             </div>
 
