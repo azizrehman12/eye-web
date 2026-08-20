@@ -1,37 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import PurchaseButton from './PurchaseButton';
 
 const ProductCard = ({ product }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Filter valid images and fallback if none
-  const validImages = (product.images || []).filter(img => img && img.image_url);
-  
-  // Sort to ensure primary image is first
-  const sortedImages = [...validImages].sort((a, b) => {
-    if (a.is_primary) return -1;
-    if (b.is_primary) return 1;
-    return (a.sort_order || 0) - (b.sort_order || 0);
-  });
-
-  const displayImages = sortedImages.length > 0 
-    ? sortedImages 
-    : [{ id: 'fallback', image_url: '/placeholder-glasses.jpg' }];
-
-  useEffect(() => {
-    let intervalId;
-    if (displayImages.length > 1) {
-      intervalId = setInterval(() => {
-        setCurrentIndex(prev => (prev + 1) % displayImages.length);
-      }, 3000);
-    }
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [displayImages.length]);
-
+  const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0];
+  const imageUrl = primaryImage ? primaryImage.image_url : '/placeholder-glasses.jpg';
   const hasSale = product.sale_price && product.sale_price < product.price;
   
   // Calculate discount percentage
@@ -46,27 +20,10 @@ const ProductCard = ({ product }) => {
         </button>
         <Link 
           to={`/products/${product.slug}`} 
-          style={{ display: 'block', position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1 }} 
-          aria-label={product.name}
-        >
-          {displayImages.map((img, index) => (
-            <div
-              key={img.id || index}
-              className="product-image"
-              style={{
-                backgroundImage: `url('${img.image_url}')`,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                opacity: currentIndex === index ? 1 : 0,
-                transition: 'opacity 0.8s ease-in-out',
-                zIndex: currentIndex === index ? 1 : 0
-              }}
-            />
-          ))}
-        </Link>
+          className="product-image" 
+          style={{ backgroundImage: `url('${imageUrl}')`, display: 'block', width: '100%', height: '100%' }} 
+          aria-label={product.name} 
+        />
       </div>
       
       <div className="product-info">
