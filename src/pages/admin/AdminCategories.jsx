@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { categoryService } from '../../services/categoryService';
 import { storageService } from '../../services/storageService';
-import { Plus, Edit2, Trash2, Image as ImageIcon, Upload } from 'lucide-react';
+import { Plus, Edit2, Trash2, Image as ImageIcon, Upload, X } from 'lucide-react';
 import '../../styles/admin-forms.css';
 
 const AdminCategories = () => {
@@ -11,6 +11,7 @@ const AdminCategories = () => {
   const [saving, setSaving] = useState(false);
 
   // Form State
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [formData, setFormData] = useState({ id: null, name: '', slug: '', description: '', active: true, image_url: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [imageFile, setImageFile] = useState(null);
@@ -90,11 +91,7 @@ const AdminCategories = () => {
       }
 
       // Reset form and refresh
-      setFormData({ id: null, name: '', slug: '', description: '', active: true, image_url: '' });
-      setIsEditing(false);
-      setImageFile(null);
-      setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      handleCancelEdit();
       await fetchCategories();
     } catch (err) {
       setError(err.message);
@@ -133,10 +130,11 @@ const AdminCategories = () => {
       image_url: category.image_url || ''
     });
     setIsEditing(true);
+    setIsFormOpen(true);
     setImageFile(null);
     setImagePreview(category.image_url || null);
     if (fileInputRef.current) fileInputRef.current.value = '';
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -157,6 +155,7 @@ const AdminCategories = () => {
   const handleCancelEdit = () => {
     setFormData({ id: null, name: '', slug: '', description: '', active: true, image_url: '' });
     setIsEditing(false);
+    setIsFormOpen(false);
     setImageFile(null);
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -164,8 +163,13 @@ const AdminCategories = () => {
 
   return (
     <div>
-      <div className="header-actions">
-        <h1>Categories</h1>
+      <div className="header-actions" style={{ marginBottom: '1rem' }}>
+        <h1 style={{ margin: 0 }}>Categories</h1>
+        {!isFormOpen && (
+          <button className="btn btn--primary" onClick={() => setIsFormOpen(true)}>
+            <Plus size={16} style={{ marginRight: '8px' }} /> Add New Category
+          </button>
+        )}
       </div>
 
       {error && (
@@ -174,105 +178,112 @@ const AdminCategories = () => {
         </div>
       )}
 
-      <div className="admin-grid">
-        {/* Left Col: Form */}
-        <div className="admin-card" style={{ alignSelf: 'start' }}>
-          <h2>{isEditing ? 'Edit Category' : 'Add New Category'}</h2>
-          <form onSubmit={handleSubmit} className="mt-2">
-            <div className="form-group">
-              <label className="form-label">Name *</label>
-              <input
-                type="text"
-                name="name"
-                className="form-control"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* Toggleable Form Area */}
+        {isFormOpen && (
+          <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ margin: 0 }}>{isEditing ? 'Edit Category' : 'Add New Category'}</h2>
+              <button onClick={handleCancelEdit} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}>
+                <X size={20} />
+              </button>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Slug (URL) *</label>
-              <input
-                type="text"
-                name="slug"
-                className="form-control"
-                value={formData.slug}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Description</label>
-              <textarea
-                name="description"
-                className="form-control"
-                rows="3"
-                value={formData.description || ''}
-                onChange={handleInputChange}
-              ></textarea>
-            </div>
-
-            <div className="form-group flex-row align-center">
-              <input
-                type="checkbox"
-                name="active"
-                checked={formData.active}
-                onChange={handleInputChange}
-              />
-              <label className="form-label mb-0 ml-1">Active (Visible on Store)</label>
-            </div>
-
-            <div className="form-group mt-2">
-              <label className="form-label">Category Image</label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {imagePreview ? (
-                  <div style={{ position: 'relative', width: '150px', height: '150px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
-                    <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                ) : (
-                  <div style={{ width: '150px', height: '150px', borderRadius: '8px', border: '2px dashed #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc', color: '#94a3b8' }}>
-                    <ImageIcon size={32} />
-                  </div>
-                )}
-                <div className="image-upload-area" style={{ width: '150px', padding: '10px' }}>
-                  <label htmlFor="category-image-upload" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    <Upload size={16} />
-                    <span>Upload</span>
-                  </label>
+            <form onSubmit={handleSubmit}>
+              <div className="admin-form-grid" style={{ gap: '1rem', marginBottom: '1rem' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Name *</label>
                   <input
-                    type="file"
-                    id="category-image-upload"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={fileInputRef}
-                    style={{ display: 'none' }}
+                    type="text"
+                    name="name"
+                    className="form-control"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Slug (URL) *</label>
+                  <input
+                    type="text"
+                    name="slug"
+                    className="form-control"
+                    value={formData.slug}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="flex-row mt-2">
-              <button type="submit" className="btn btn--primary" disabled={saving}>
-                {saving ? 'Saving...' : (isEditing ? 'Update Category' : 'Create Category')}
-              </button>
-              {isEditing && (
-                <button type="button" className="btn btn--outline" onClick={handleCancelEdit}>
+              <div className="form-group" style={{ marginBottom: '1rem' }}>
+                <label className="form-label">Description</label>
+                <textarea
+                  name="description"
+                  className="form-control"
+                  rows="2"
+                  value={formData.description || ''}
+                  onChange={handleInputChange}
+                ></textarea>
+              </div>
+
+              <div className="form-group flex-row align-center" style={{ marginBottom: '1rem' }}>
+                <input
+                  type="checkbox"
+                  name="active"
+                  checked={formData.active}
+                  onChange={handleInputChange}
+                />
+                <label className="form-label mb-0 ml-1">Active (Visible on Store)</label>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Category Image</label>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  {imagePreview ? (
+                    <div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                      <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  ) : (
+                    <div style={{ width: '80px', height: '80px', borderRadius: '8px', border: '2px dashed #cbd5e1', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8fafc', color: '#94a3b8' }}>
+                      <ImageIcon size={24} />
+                    </div>
+                  )}
+                  <div className="image-upload-area" style={{ padding: '8px 12px', margin: 0 }}>
+                    <label htmlFor="category-image-upload" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '14px' }}>
+                      <Upload size={14} />
+                      <span>Upload</span>
+                    </label>
+                    <input
+                      type="file"
+                      id="category-image-upload"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-row" style={{ marginTop: '1.5rem', gap: '1rem' }}>
+                <button type="submit" className="btn btn--primary" disabled={saving} style={{ flex: 1 }}>
+                  {saving ? 'Saving...' : (isEditing ? 'Update Category' : 'Create Category')}
+                </button>
+                <button type="button" className="btn btn--outline" onClick={handleCancelEdit} style={{ flex: 1 }}>
                   Cancel
                 </button>
-              )}
-            </div>
-          </form>
-        </div>
+              </div>
+            </form>
+          </div>
+        )}
 
-        {/* Right Col: List */}
+        {/* List Area */}
         <div className="admin-card">
-          <h2>Existing Categories</h2>
+          <h2 style={{ margin: '0 0 1rem 0' }}>Existing Categories</h2>
           {loading ? (
-            <p className="mt-2">Loading categories...</p>
+            <p>Loading categories...</p>
           ) : (
-            <div className="table-responsive mt-2">
+            <div className="table-responsive">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -280,13 +291,13 @@ const AdminCategories = () => {
                     <th>Name</th>
                     <th>Slug</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {categories.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="text-center text-muted py-2">No categories found. Create one!</td>
+                      <td colSpan="5" className="text-center text-muted py-2">No categories found. Create one!</td>
                     </tr>
                   ) : (
                     categories.map(cat => (
@@ -310,7 +321,7 @@ const AdminCategories = () => {
                           )}
                         </td>
                         <td>
-                          <div className="flex-row" style={{ gap: '0.5rem' }}>
+                          <div className="flex-row" style={{ gap: '0.5rem', justifyContent: 'flex-end' }}>
                             <button className="btn-icon" onClick={() => handleEdit(cat)} title="Edit">
                               <Edit2 size={16} />
                             </button>

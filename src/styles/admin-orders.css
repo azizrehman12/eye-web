@@ -1,7 +1,6 @@
-/* ===== ADMIN ORDERS PANEL ===== */
 .admin-orders {
-  padding: 32px;
   max-width: 1400px;
+  margin: 0 auto;
 }
 
 .admin-orders__header {
@@ -194,14 +193,21 @@
 
 /* Status select */
 .status-select {
-  padding: 6px 10px;
+  padding: 4px 20px 4px 6px;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-family: 'Inter', sans-serif;
   background: #ffffff;
   cursor: pointer;
   outline: none;
+  font-weight: 500;
+  color: #475569;
+  text-transform: capitalize;
+  width: 105px; /* Shorter length */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /* Expandable Detail */

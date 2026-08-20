@@ -156,15 +156,15 @@ const AdminOrders = () => {
           <table className="admin-orders__table">
             <thead>
               <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Confirmed</th>
-                <th>Actions</th>
+                <th style={{ width: '8%' }}>Order ID</th>
+                <th style={{ width: '21%' }}>Customer</th>
+                <th style={{ width: '14%' }}>Product</th>
+                <th style={{ width: '4%', textAlign: 'center' }}>Qty</th>
+                <th style={{ width: '8%' }}>Total</th>
+                <th style={{ width: '8%' }}>Status</th>
+                <th style={{ width: '11%' }}>Created</th>
+                <th style={{ width: '11%' }}>Confirmed</th>
+                <th style={{ width: '15%' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +179,7 @@ const AdminOrders = () => {
                       </td>
                       <td>
                         <div style={{ fontWeight: 600, color: '#0f172a' }}>{order.customer_name}</div>
-                        <div style={{ fontSize: 12, color: '#64748b' }}>{order.customer_email}</div>
+                        <div style={{ fontSize: 12, color: '#64748b', wordBreak: 'break-all' }}>{order.customer_email}</div>
                         <div style={{ fontSize: 12, color: '#64748b' }}>{order.customer_phone}</div>
                       </td>
                       <td>

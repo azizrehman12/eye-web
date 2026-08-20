@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, ShoppingBag, Mail, Check } from 'lucide-react';
+import { MessageCircle, ShoppingBag, Check } from 'lucide-react';
 import { settingsService } from '../../services/settingsService';
 import OrderFormModal from './OrderFormModal';
 
@@ -13,16 +13,12 @@ import OrderFormModal from './OrderFormModal';
  */
 const PurchaseButton = ({ product, variant = 'full', className = '' }) => {
   const [phoneNumber, setPhoneNumber] = useState('923169649626'); // Fallback only
-  const [storeEmail, setStoreEmail] = useState('hello@aplusoptics.com'); // Fallback email
   const [orderModalOpen, setOrderModalOpen] = useState(false);
 
   useEffect(() => {
     settingsService.getSettings().then(settings => {
       if (settings?.whatsapp_number) {
         setPhoneNumber(settings.whatsapp_number);
-      }
-      if (settings?.store_email) {
-        setStoreEmail(settings.store_email);
       }
     }).catch(() => {/* Use fallback */});
   }, []);
@@ -40,22 +36,7 @@ const PurchaseButton = ({ product, variant = 'full', className = '' }) => {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const handleGmail = (e) => {
-    e.preventDefault();
-    const baseUrl = window.location.origin;
-    const productUrl = product.slug ? `${baseUrl}/products/${product.slug}` : window.location.href;
-    const unitPrice = product.sale_price && product.sale_price < product.price
-      ? product.sale_price
-      : product.price;
-
-    const subject = `Inquiry regarding ${product.name}`;
-    const body = `Hello! I am interested in this product.\n\nProduct: ${product.name}\nCategory: ${product.categories?.name || 'N/A'}\nSKU: ${product.sku || 'N/A'}\nPrice: Rs. ${unitPrice}\n\nProduct Link:\n${productUrl}\n\nPlease provide more details.`;
-
-    window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(storeEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-  };
-
   const isDirectOrder = product?.purchase_method === 'direct_order';
-  const isGmail = product?.purchase_method === 'gmail';
 
   // CARD variant — compact icon-only button
   if (variant === 'card') {
@@ -78,19 +59,7 @@ const PurchaseButton = ({ product, variant = 'full', className = '' }) => {
         </>
       );
     }
-    if (isGmail) {
-      return (
-        <button
-          className={`whatsapp-action ${className}`}
-          style={{ background: '#FEE2E2', color: '#DC2626' }}
-          onClick={handleGmail}
-          aria-label="Email to Order"
-          title="Email to Order"
-        >
-          <Mail size={18} strokeWidth={2} />
-        </button>
-      );
-    }
+    
     return (
       <button
         className={`whatsapp-action ${className}`}
@@ -120,19 +89,6 @@ const PurchaseButton = ({ product, variant = 'full', className = '' }) => {
           product={product}
         />
       </>
-    );
-  }
-
-  if (isGmail) {
-    return (
-      <button
-        className={`btn-purchase-direct ${className}`}
-        style={{ background: '#DC2626', color: 'white', border: 'none' }}
-        onClick={handleGmail}
-      >
-        <Mail size={18} strokeWidth={2} />
-        Email to Order
-      </button>
     );
   }
 
