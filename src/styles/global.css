@@ -145,6 +145,21 @@ ul, ol {
   width: 100%;
 }
 
+.btn--whatsapp {
+  background-color: #25D366;
+  color: #fff;
+  border: 1px solid #25D366;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--whatsapp:hover {
+  background-color: #128C7E;
+  border-color: #128C7E;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
 /* Forms */
 .form-group {
   margin-bottom: 1.5rem;

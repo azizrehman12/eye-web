@@ -178,7 +178,8 @@ serve(async (req) => {
     }
 
     subtotal = parseFloat(subtotal.toFixed(2));
-    const total = subtotal + DELIVERY_CHARGES;
+    const finalDeliveryCharges = subtotal >= 5000 ? 0 : DELIVERY_CHARGES;
+    const total_amount = subtotal + finalDeliveryCharges;
 
     const confirmationToken = crypto.randomUUID();
     const tokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
@@ -199,8 +200,8 @@ serve(async (req) => {
         notes: notes || null,
         lens_details: primaryLensDetails, // legacy support
         subtotal,
-        total,
-        total_amount: total, // Fallback for legacy schema
+        total: total_amount,
+        total_amount: total_amount, // Fallback for legacy schema
         // We'll pass delivery_charges just in case the column exists, if it fails we remove it. 
         // Actually, Supabase inserts fail if a column doesn't exist. 
         // To be safe, we rely on total = subtotal + 300. We can add it in a migration later.

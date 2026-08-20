@@ -22,7 +22,18 @@ const OrderFormModal = ({ isOpen, onClose, cartItems, subtotal, deliveryCharges,
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState('');
 
-  if (!isOpen || !cartItems || cartItems.length === 0) return null;
+  React.useEffect(() => {
+    if (isOpen) {
+      setForm(INITIAL_FORM);
+      setErrors({});
+      setSubmitted(false);
+      setServerError('');
+      setSubmitting(false);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+  if (!submitted && (!cartItems || cartItems.length === 0)) return null;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

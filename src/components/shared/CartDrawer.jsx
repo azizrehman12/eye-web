@@ -31,7 +31,7 @@ const CartDrawer = () => {
     return total + ((itemPrice + lensPrice) * item.quantity);
   }, 0);
 
-  const deliveryCharges = 300;
+  const deliveryCharges = subtotal >= 5000 ? 0 : 300;
   const grandTotal = subtotal + deliveryCharges;
 
   const routing = useMemo(() => evaluateCartOrderRouting(cartItems), [cartItems]);
@@ -85,6 +85,9 @@ const CartDrawer = () => {
         <div className="cart-header">
           <h2>Your Cart ({cartItems.length})</h2>
           <button onClick={() => setIsCartOpen(false)} className="close-btn"><X size={24} /></button>
+        </div>
+        <div style={{ backgroundColor: '#fef2f2', color: '#991b1b', padding: '8px 16px', fontSize: '13px', textAlign: 'center', fontWeight: '500', borderBottom: '1px solid #fee2e2' }}>
+          Enjoy Free Shipping on all orders above Rs. 5,000!
         </div>
 
         <div className="cart-items">

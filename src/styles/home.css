@@ -415,28 +415,58 @@
 .card-actions {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
   width: 100%;
+  min-width: 0;
   margin-top: auto;
+}
+
+.card-actions .view-details-btn,
+.card-actions .card-add-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+  box-sizing: border-box;
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .view-details-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 0px;
-  flex: 1;
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  line-height: 16px;
   color: #0F172A;
   text-decoration: none;
   transition: background 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.card-add-btn span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-add-btn svg {
+  flex-shrink: 0;
 }
 
 .view-details-btn:hover {
@@ -477,6 +507,19 @@
   }
 }
 
+@media (max-width: 768px) {
+  .card-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-actions .view-details-btn,
+  .card-actions .card-add-btn {
+    width: 100%;
+    flex: none;
+  }
+}
+
 @media (max-width: 600px) {
   .product-card {
     width: calc(50% - 8px);
@@ -500,9 +543,10 @@
   .original-price {
     font-size: 12px;
   }
-  .view-details-btn {
-    padding: 8px 0px;
-    font-size: 12px;
+  .view-details-btn,
+  .card-add-btn {
+    padding: 8px 6px;
+    font-size: 11px;
   }
   .whatsapp-action {
     width: 32px;
