@@ -87,15 +87,15 @@ serve(async (req) => {
     const confirmedAt = new Date().toISOString();
 
     // 4. ATOMIC CONFIRMATION — only succeeds if status is still pending_confirmation
-    const { data: updatedOrders, error: updateError } = await supabase
+    const { data: updatedOrder, error: updateError } = await supabase
       .from("orders")
       .update({
-        status: "confirmed",
-        confirmed_at: confirmedAt,
+        status: "confirmed"
       })
       .eq("id", order.id)
       .eq("status", "pending_confirmation")
-      .select();
+      .select()
+      .single();
 
     if (updateError) {
       console.error("Update error:", updateError);
@@ -117,7 +117,7 @@ serve(async (req) => {
       );
     }
 
-    if (!updatedOrders || updatedOrders.length === 0) {
+    if (!updatedOrder) {
       return new Response(
         JSON.stringify({
           success: true,
@@ -136,8 +136,8 @@ serve(async (req) => {
 
     const shortOrderId = order.id.split("-")[0].toUpperCase();
     const siteUrl = Deno.env.get("SITE_URL") || "https://aplusoptics.com";
-    const deliveryCharges = 300;
-    const subtotal = parseFloat(order.subtotal ?? (parseFloat(order.total) - deliveryCharges));
+    const subtotal = parseFloat(order.subtotal ?? (parseFloat(order.total) - 300));
+    const deliveryCharges = subtotal >= 5000 ? 0 : 300;
 
     const productIds = (orderItems || []).map((item) => item.product_id).filter(Boolean);
     const { data: productsData } = productIds.length

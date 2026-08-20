@@ -37,12 +37,11 @@ const PurchaseButton = ({ product, variant = 'full', className = '', selectedLen
   if (variant === 'card') {
     return (
       <button 
-        className={`btn btn--primary ${className}`} 
+        className={`btn btn--primary card-add-btn ${className}`}
         onClick={handleAddToCart}
-        style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}
       >
-        {added ? <Check size={16} /> : <ShoppingBag size={16} />}
-        {added ? 'Added' : 'Add to Cart'}
+        {added ? <Check size={14} /> : <ShoppingBag size={14} />}
+        <span>{added ? 'Added' : 'Add to Cart'}</span>
       </button>
     );
   }
