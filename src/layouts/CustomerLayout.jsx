@@ -3,50 +3,60 @@ import { Outlet, Link, NavLink } from 'react-router-dom';
 import { Menu, Search, ShoppingBag, Eye, Phone, CreditCard, Shield, Check } from 'lucide-react';
 import MobileSidebar from '../components/customer/MobileSidebar';
 import WhatsAppButton from '../components/shared/WhatsAppButton';
+import CartDrawer from '../components/shared/CartDrawer';
+import { useCart } from '../context/CartContext';
 import '../styles/header.css';
 import '../styles/footer.css';
 
-const Header = ({ onOpenSidebar }) => (
-  <header className="site-header">
-    <div className="site-header__inner">
-      <button 
-        className="hide-on-desktop icon-btn mobile-menu-btn" 
-        onClick={onOpenSidebar}
-        aria-label="Open menu"
-      >
-        <Menu size={24} />
-      </button>
+const Header = ({ onOpenSidebar }) => {
+  const { cartItems, setIsCartOpen } = useCart();
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-      <div className="header-left">
-        <Link to="/" className="site-header__logo">
-          <img src="/logo.jpeg" alt="OptiVue Logo" className="header-logo-img" />
-        </Link>
-      </div>
-        
-      <nav className="site-header__nav hide-on-mobile">
-          <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
-          <NavLink to="/category/mens" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Men's</NavLink>
-          <NavLink to="/category/womens" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Women's</NavLink>
-          <NavLink to="/category/eyeglasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Eyeglasses</NavLink>
-          <NavLink to="/category/sunglasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Sunglasses</NavLink>
-          <NavLink to="/category/screen-glasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Screen Glasses</NavLink>
-          <NavLink to="/category/intelligent-glasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Intelligent Glasses</NavLink>
-          <NavLink to="/category/contact-lenses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Contact Lenses</NavLink>
-        </nav>
+  return (
+    <header className="site-header">
+      <div className="site-header__inner">
+        <button 
+          className="hide-on-desktop icon-btn mobile-menu-btn" 
+          onClick={onOpenSidebar}
+          aria-label="Open menu"
+        >
+          <Menu size={24} />
+        </button>
 
-      <div className="site-header__actions">
-        <div className="icon-actions">
-          <button className="icon-btn" aria-label="Search"><Search size={20} color="#1e293b" strokeWidth={2} /></button>
-          <button className="icon-btn" aria-label="Cart"><ShoppingBag size={20} color="#1e293b" strokeWidth={2} /></button>
+        <div className="header-left">
+          <Link to="/" className="site-header__logo">
+            <img src="/logo.jpeg" alt="OptiVue Logo" className="header-logo-img" />
+          </Link>
         </div>
-        <WhatsAppButton className="btn-consult-green">
-          <Phone size={16} color="#FFFFFF" strokeWidth={2} />
-          <span className="hide-on-mobile">Consult Optician</span>
-        </WhatsAppButton>
+          
+        <nav className="site-header__nav hide-on-mobile">
+            <NavLink to="/" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Home</NavLink>
+            <NavLink to="/category/mens" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Men's</NavLink>
+            <NavLink to="/category/womens" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Women's</NavLink>
+            <NavLink to="/category/eyeglasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Eyeglasses</NavLink>
+            <NavLink to="/category/sunglasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Sunglasses</NavLink>
+            <NavLink to="/category/screen-glasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Screen Glasses</NavLink>
+            <NavLink to="/category/intelligent-glasses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Intelligent Glasses</NavLink>
+            <NavLink to="/category/contact-lenses" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>Contact Lenses</NavLink>
+          </nav>
+
+        <div className="site-header__actions">
+          <div className="icon-actions">
+            <button className="icon-btn" aria-label="Search"><Search size={20} color="#1e293b" strokeWidth={2} /></button>
+            <button className="icon-btn cart-icon-btn" aria-label="Cart" onClick={() => setIsCartOpen(true)}>
+              <ShoppingBag size={20} color="#1e293b" strokeWidth={2} />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </button>
+          </div>
+          <WhatsAppButton className="btn-consult-green">
+            <Phone size={16} color="#FFFFFF" strokeWidth={2} />
+            <span className="hide-on-mobile">Consult Optician</span>
+          </WhatsAppButton>
+        </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 const Footer = () => (
   <footer className="footer-container">
@@ -115,20 +125,19 @@ const Footer = () => (
 );
 
 const CustomerLayout = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="customer-layout">
+    <div className="layout-customer">
       <Header onOpenSidebar={() => setSidebarOpen(true)} />
-      <MobileSidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-      
-      <main className="main-content">
+      <MobileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="layout-customer__main">
         <Outlet />
       </main>
       <Footer />
+      <CartDrawer />
     </div>
   );
 };
 
 export default CustomerLayout;
-

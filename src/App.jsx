@@ -39,44 +39,48 @@ const ProtectedAdminRoute = ({ children }) => {
   return children;
 };
 
+import { CartProvider } from './context/CartContext';
+
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          {/* Customer Routes */}
-          <Route path="/" element={<CustomerLayout />}>
-            <Route index element={<Home />} />
-            <Route path="products" element={<Products />} />
-            <Route path="products/:id" element={<ProductDetails />} />
-            <Route path="category/:slug" element={<Products />} />
-            <Route path="order/confirm" element={<OrderConfirmation />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
+      <CartProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            {/* Customer Routes */}
+            <Route path="/" element={<CustomerLayout />}>
+              <Route index element={<Home />} />
+              <Route path="products" element={<Products />} />
+              <Route path="products/:id" element={<ProductDetails />} />
+              <Route path="category/:slug" element={<Products />} />
+              <Route path="order/confirm" element={<OrderConfirmation />} />
+              <Route path="about" element={<About />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
 
-          {/* Admin Auth Route (No Layout) */}
-          <Route path="/admin/login" element={<AdminLogin />} />
+            {/* Admin Auth Route (No Layout) */}
+            <Route path="/admin/login" element={<AdminLogin />} />
 
-          {/* Admin Protected Routes */}
-          <Route path="/admin" element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          }>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="products/new" element={<ProductForm />} />
-            <Route path="products/edit/:id" element={<ProductForm />} />
-            <Route path="categories" element={<AdminCategories />} />
-            <Route path="lenses" element={<AdminLenses />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="settings" element={<AdminSettings />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            {/* Admin Protected Routes */}
+            <Route path="/admin" element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="products/new" element={<ProductForm />} />
+              <Route path="products/edit/:id" element={<ProductForm />} />
+              <Route path="categories" element={<AdminCategories />} />
+              <Route path="lenses" element={<AdminLenses />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

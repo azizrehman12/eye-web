@@ -58,9 +58,7 @@ const ProductDetails = () => {
           setLenses([]);
           setSelectedLens(null);
         }
-        if (productData.available_colors && Array.isArray(productData.available_colors) && productData.available_colors.length > 0) {
-          setSelectedColor(productData.available_colors[0]);
-        }
+        // Let the user manually select a color. We will not auto-select.
 
       } catch (err) {
         console.error("Failed to fetch product data", err);
@@ -234,7 +232,7 @@ const ProductDetails = () => {
             <>
               <div className="color-selection-section">
                 <h4 className="pd-outfit" style={{ fontSize: '16px', marginBottom: '8px', color: '#0f172a' }}>
-                  Select Color: <span style={{ fontWeight: 'normal', color: '#64748b' }}>{selectedColor}</span>
+                  Select Color: <span style={{ fontWeight: 'normal', color: '#64748b' }}>{selectedColor || 'None Selected'}</span>
                 </h4>
                 <div className="color-options-container" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {product.available_colors.map((color) => (

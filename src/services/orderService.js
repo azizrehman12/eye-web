@@ -11,7 +11,7 @@ export const orderService = {
    * sends the customer confirmation email.
    * NEVER pass price/total from frontend — Edge Function calculates it.
    */
-  async createOrder({ productId, quantity, customerName, customerEmail, customerPhone, address, city, notes, lensDetails }) {
+  async createOrder(orderPayload) {
     const response = await fetch(`${SUPABASE_URL}/functions/v1/create-order`, {
       method: 'POST',
       headers: {
@@ -19,17 +19,7 @@ export const orderService = {
         'apikey': ANON_KEY,
         'Authorization': `Bearer ${ANON_KEY}`,
       },
-      body: JSON.stringify({
-        product_id: productId,
-        quantity,
-        customer_name: customerName,
-        customer_email: customerEmail,
-        customer_phone: customerPhone,
-        address,
-        city,
-        notes: notes || null,
-        lens_details: lensDetails || null,
-      }),
+      body: JSON.stringify(orderPayload),
     });
 
     const data = await response.json();

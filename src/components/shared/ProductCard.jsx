@@ -1,9 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import PurchaseButton from './PurchaseButton';
+import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Redirect when mandatory options must be chosen on the product page
+    if (product.available_colors && product.available_colors.length > 0) {
+      navigate(`/products/${product.slug}`);
+      return;
+    }
+
+    if (product.purchase_method === 'direct_order') {
+      navigate(`/products/${product.slug}`);
+      return;
+    }
+
+    addToCart(product, null, null, 1);
+  };
+
   const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0];
   const imageUrl = primaryImage ? primaryImage.image_url : '/placeholder-glasses.jpg';
   const hasSale = product.sale_price && product.sale_price < product.price;
@@ -15,7 +37,7 @@ const ProductCard = ({ product }) => {
     <div className="product-card">
       <div className="product-image-container">
         {hasSale && <div className="discount-badge">-{discount}%</div>}
-        <button className="wishlist-btn" aria-label="Add to wishlist">
+        <button className="wishlist-btn" aria-label="Add to cart" onClick={handleAddToCart}>
           <Heart size={16} strokeWidth={2} />
         </button>
         <Link 

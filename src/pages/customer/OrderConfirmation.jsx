@@ -9,6 +9,7 @@ const OrderConfirmation = () => {
 
   const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
+  const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -18,8 +19,9 @@ const OrderConfirmation = () => {
     }
 
     orderService.confirmOrder(token)
-      .then(() => {
+      .then((data) => {
         setStatus('success');
+        setAlreadyConfirmed(Boolean(data.already_confirmed));
       })
       .catch((err) => {
         setStatus('error');
@@ -71,11 +73,14 @@ const OrderConfirmation = () => {
               <CheckCircle size={40} color="#065f46" />
             </div>
             <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '26px', color: '#0f172a', marginBottom: '12px' }}>
-              Order Confirmed!
+              {alreadyConfirmed ? 'Order Already Confirmed' : 'Order Confirmed!'}
             </h2>
             <p style={{ color: '#475569', fontSize: '15px', lineHeight: '1.6', marginBottom: '24px' }}>
-              Your order has been confirmed successfully. Our team at APlusOptics will process it shortly and contact you with delivery details.
+              {alreadyConfirmed
+                ? 'This order was already confirmed successfully. No further action is needed.'
+                : 'Your order has been confirmed successfully. Our team at APlusOptics will process it shortly and contact you with delivery details.'}
             </p>
+            {!alreadyConfirmed && (
             <div style={{
               background: '#eff6ff',
               border: '1px solid #bfdbfe',
@@ -87,6 +92,7 @@ const OrderConfirmation = () => {
             }}>
               📧 A confirmation has been sent to <strong>opticsaplus@gmail.com</strong>. You may also receive a follow-up from our team.
             </div>
+            )}
             <Link
               to="/products"
               style={{
