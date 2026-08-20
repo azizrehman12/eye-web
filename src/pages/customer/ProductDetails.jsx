@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Phone } from 'lucide-react';
 import { productService } from '../../services/productService';
 import PurchaseButton from '../../components/shared/PurchaseButton';
 import '../../styles/product-details.css';
 
 const ProductDetails = () => {
-  const { id } = useParams(); // Using 'id' param from router, but it's actually the slug based on the Link `to={`/products/${product.slug}`}`
+  const { id } = useParams();
   const slug = id;
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,20 +46,22 @@ const ProductDetails = () => {
   const hasSale = product.sale_price && product.sale_price < product.price;
 
   return (
-    <div className="container section-padding">
-      <div className="product-details">
-        {/* Gallery */}
-        <div className="product-gallery">
-          <div className="product-gallery__main">
+    <div className="pd-page">
+      <div className="main-content-split">
+
+        {/* Left Column - Gallery */}
+        <div className="left-column">
+          <div className="product-image-container">
+
             <img src={activeImage} alt={product.name} />
           </div>
-          
-          {product.images && product.images.length > 1 && (
-            <div className="product-gallery__thumbnails">
+
+          {product.images && product.images.length > 0 && (
+            <div className="image-gallery-thumbnails">
               {product.images.map(img => (
-                <div 
-                  key={img.id} 
-                  className={`product-gallery__thumb ${activeImage === img.image_url ? 'is-active' : ''}`}
+                <div
+                  key={img.id}
+                  className={`thumb-frame ${activeImage === img.image_url ? 'active' : ''}`}
                   onClick={() => setActiveImage(img.image_url)}
                 >
                   <img src={img.image_url} alt="Thumbnail" />
@@ -68,81 +71,100 @@ const ProductDetails = () => {
           )}
         </div>
 
-        {/* Info */}
-        <div className="product-info">
-          <span className="product-info__category">{product.categories?.name || 'Uncategorized'}</span>
-          <h1 className="product-info__title">{product.name}</h1>
-          
-          <div className="product-info__price-box">
-            {hasSale ? (
-              <>
-                <span className="product-info__sale-price">PKR {product.sale_price}</span>
-                <span className="product-info__original-price">PKR {product.price}</span>
-                <span className="badge badge--error">SALE</span>
-              </>
-            ) : (
-              <span className="product-info__price">PKR {product.price}</span>
-            )}
-            
-            {product.stock_quantity === 0 && (
-              <span className="badge badge--error ml-auto">Out of Stock</span>
-            )}
+        {/* Right Column - Info & Checkout */}
+        <div className="right-column">
+
+          {/* Info Block */}
+          <div className="info-block">
+            <div className="category-badge-wrap">
+              <span className="category-name">{product.categories?.name || 'EYEGLASSES'}</span>
+              <div className="dot"></div>
+              <span className="lab-certified">LAB CERTIFIED</span>
+            </div>
+
+            <h1 className="product-title pd-outfit">{product.name}</h1>
+
+            <div className="pricing-row">
+              {hasSale ? (
+                <>
+                  <span className="sale-price pd-outfit">Rs. {product.sale_price}</span>
+                  <span className="original-price pd-outfit">Rs. {product.price}</span>
+                </>
+              ) : (
+                <span className="price pd-outfit">Rs. {product.price}</span>
+              )}
+
+            </div>
+
+            <p className="product-short-desc">
+              {product.short_description || product.description || "Premium handcrafted frames engineered for seamless everyday durability."}
+            </p>
           </div>
 
-          <div className="product-info__description">
-            <p>{product.short_description || product.description}</p>
+          <div className="section-divider"></div>
+
+          {/* Specifications Grid */}
+          <div className="specifications-section">
+            <h2 className="section-title pd-outfit">Product Specifications</h2>
+            <div className="specs-grid">
+
+              <div className="grid-row">
+                <div className="spec-box">
+                  <span className="label">Brand</span>
+                  <span className="value">{product.brand || 'OptiVue Crafted'}</span>
+                </div>
+                <div className="spec-box">
+                  <span className="label">SKU</span>
+                  <span className="value">{product.sku || 'N/A'}</span>
+                </div>
+              </div>
+
+              <div className="grid-row">
+                <div className="spec-box">
+                  <span className="label">Gender</span>
+                  <span className="value">{product.gender || 'Unisex'}</span>
+                </div>
+                <div className="spec-box">
+                  <span className="label">Frame Type</span>
+                  <span className="value">{product.frame_type || 'Full Rim'}</span>
+                </div>
+              </div>
+
+              <div className="grid-row">
+                <div className="spec-box">
+                  <span className="label">Material</span>
+                  <span className="value">{product.frame_material || 'Aerospace Titanium'}</span>
+                </div>
+                <div className="spec-box">
+                  <span className="label">Color</span>
+                  <span className="value">{product.frame_color || 'Gunmetal Grey'}</span>
+                </div>
+              </div>
+
+            </div>
           </div>
 
-          {/* Specifications */}
-          <div className="product-specs">
-            {product.brand && (
-              <div className="spec-item">
-                <span className="spec-item__label">Brand</span>
-                <span className="spec-item__value">{product.brand}</span>
-              </div>
-            )}
-            {product.sku && (
-              <div className="spec-item">
-                <span className="spec-item__label">SKU</span>
-                <span className="spec-item__value">{product.sku}</span>
-              </div>
-            )}
-            {product.gender && (
-              <div className="spec-item">
-                <span className="spec-item__label">Gender</span>
-                <span className="spec-item__value">{product.gender}</span>
-              </div>
-            )}
-            {product.frame_type && (
-              <div className="spec-item">
-                <span className="spec-item__label">Frame Type</span>
-                <span className="spec-item__value">{product.frame_type}</span>
-              </div>
-            )}
-            {product.frame_material && (
-              <div className="spec-item">
-                <span className="spec-item__label">Material</span>
-                <span className="spec-item__value">{product.frame_material}</span>
-              </div>
-            )}
-            {product.frame_color && (
-              <div className="spec-item">
-                <span className="spec-item__label">Color</span>
-                <span className="spec-item__value">{product.frame_color}</span>
-              </div>
-            )}
+          <div className="section-divider"></div>
+
+          {/* Details Section */}
+          <div className="details-section">
+            <h2 className="section-title pd-outfit">Details</h2>
+            <p className="details-text">
+              {product.description || "Every frame incorporates clinical-grade, ultra-flexible beta-titanium temples and adjustable medical silicone nose pads. Fully certified protective coatings guard against screen glare, digital blue-light strain, and ultraviolet radiation. Delivered in a premium leather case with a microfiber lens cleaning cloth."}
+            </p>
           </div>
 
-          {product.description && product.short_description && (
-             <div className="product-info__description mt-2">
-               <h3>Details</h3>
-               <p className="whitespace-pre-line">{product.description}</p>
-             </div>
-          )}
+          {/* Checkout Actions */}
+          <div className="checkout-actions">
+            <div className="place-order-btn-wrapper">
+              <PurchaseButton product={product} variant="full" />
+            </div>
 
-          <div className="product-actions mt-2">
-            <PurchaseButton product={product} variant="full" />
+            <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="whatsapp-assist" title="Contact on WhatsApp">
+              <Phone />
+            </a>
           </div>
+
         </div>
       </div>
     </div>

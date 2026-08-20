@@ -57,7 +57,7 @@ const AdminDashboard = () => {
   return (
     <div>
       <h1>Dashboard</h1>
-      
+
       <div className="dashboard-stats">
         <div className="stat-card">
           <span className="stat-card__title">Total Products</span>

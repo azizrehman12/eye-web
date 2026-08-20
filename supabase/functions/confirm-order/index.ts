@@ -164,7 +164,7 @@ body{font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;}
       },
       body: JSON.stringify({
         from: "APlusOptics Orders <orders@aplusoptics.com>",
-        to: ["2022n05445@gmail.com"],
+        to: ["opticsaplus@gmail.com"],
         subject: `New Confirmed Order — #${shortOrderId}`,
         html: ownerEmailHtml,
       }),

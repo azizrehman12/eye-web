@@ -19,7 +19,12 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [collapsedFilters, setCollapsedFilters] = useState({});
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [collapsedFilters, setCollapsedFilters] = useState({
+    category: isMobile,
+    price: isMobile,
+    frame: isMobile
+  });
 
   const toggleFilter = (filterName) => {
     setCollapsedFilters(prev => ({

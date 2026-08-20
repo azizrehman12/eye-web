@@ -114,9 +114,6 @@ const MobileSidebar = ({ isOpen, onClose }) => {
               <li>
                 <Link to="/about" onClick={onClose} className="mobile-sidebar__link">About Us</Link>
               </li>
-              <li>
-                <Link to="/track-order" onClick={onClose} className="mobile-sidebar__link">Track Order</Link>
-              </li>
             </ul>
           </nav>
         </div>

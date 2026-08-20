@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ScrollToTop from './components/shared/ScrollToTop';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Layouts
@@ -39,6 +40,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Customer Routes */}
           <Route path="/" element={<CustomerLayout />}>

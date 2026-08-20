@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, ShoppingBag, Mail } from 'lucide-react';
+import { MessageCircle, ShoppingBag, Mail, Check } from 'lucide-react';
 import { settingsService } from '../../services/settingsService';
 import OrderFormModal from './OrderFormModal';
 
@@ -111,7 +111,7 @@ const PurchaseButton = ({ product, variant = 'full', className = '' }) => {
           className={`btn-purchase-direct ${className}`}
           onClick={() => setOrderModalOpen(true)}
         >
-          <ShoppingBag size={18} strokeWidth={2} />
+          <Check size={20} strokeWidth={2} />
           Place Order
         </button>
         <OrderFormModal
